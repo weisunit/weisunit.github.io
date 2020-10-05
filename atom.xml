@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>无聊的博客</title>
+  
+  <subtitle>技术在于折腾，价值出于稳定</subtitle>
+  <link href="http://weisunit.com/atom.xml" rel="self"/>
+  
+  <link href="http://weisunit.com/"/>
+  <updated>2020-09-17T02:26:56.950Z</updated>
+  <id>http://weisunit.com/</id>
+  
+  <author>
+    <name>Sun Wei</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>树莓派Samba局域网共享</title>
+    <link href="http://weisunit.com/2020/09/16/%E6%A0%91%E8%8E%93%E6%B4%BESamba%E5%B1%80%E5%9F%9F%E7%BD%91%E5%85%B1%E4%BA%AB/"/>
+    <id>http://weisunit.com/2020/09/16/%E6%A0%91%E8%8E%93%E6%B4%BESamba%E5%B1%80%E5%9F%9F%E7%BD%91%E5%85%B1%E4%BA%AB/</id>
+    <published>2020-09-16T14:45:55.000Z</published>
+    <updated>2020-09-17T02:26:56.950Z</updated>
+    
+    <content type="html"><![CDATA[<p>一. 安装Samba</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install samba</span><br><span class="line">sudo apt-get install samba-common-bin</span><br></pre></td></tr></table></figure><p>二. 修改配置文件</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;samba&#x2F;smb.conf</span><br></pre></td></tr></table></figure><p>找到<code>Global Settings节[global]</code>部分：<br>将# <code>wins support = no</code>行改为 <code>wins support = yes</code><br>找到<code>Share Definitions</code>节<code>[homes]</code>部分：<br>将<code>read only = yes</code>行改为<code>read only = no</code></p><p>或自定义一个新的共享目录，类似如下</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Public]</span><br><span class="line">   comment &#x3D; Public Storage  # 共享文件夹说明</span><br><span class="line">   path &#x3D; &#x2F;home&#x2F;pi&#x2F;Public # 共享文件夹目录</span><br><span class="line">   read only &#x3D; no # 不只读</span><br><span class="line">   create mask &#x3D; 0777 # 创建文件的权限</span><br><span class="line">   directory mask &#x3D; 0777 # 创建文件夹的权限</span><br><span class="line">   guest ok &#x3D; yes # guest访问，无需密码</span><br><span class="line">   browseable &#x3D; yes # 可见</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>详细配置可以访问<a href="http://cn.linux.vbird.org/linux_server/0370samba.php">http://cn.linux.vbird.org/linux_server/0370samba.php</a></p><p>三. 添加Pi用户</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo smbpasswd -a pi</span><br></pre></td></tr></table></figure><p>四. 重启服务</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo &#x2F;etc&#x2F;init.d&#x2F;smbd restart</span><br></pre></td></tr></table></figure><p>五. 附录</p><ol><li><p>windows用户访问SMB有时不会弹出登录窗口，可用如下命令CMD</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">net use &#x2F;del *  # 清除所有网络连接</span><br><span class="line"></span><br><span class="line">net use \\192.168.3.12 passwd &#x2F;user:user  # passwd密码user用户名</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>再次访问就好了</p></li><li><p>树莓派访问SMB</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install smbclient </span><br></pre></td></tr></table></figure><p>访问共享文件夹</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smbclient -L &#x2F;&#x2F;192.168.3.12&#x2F;pi -U pi</span><br></pre></td></tr></table></figure><p>cifs挂载共享文件夹</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount -t cifs -o user&#x3D;user &#x2F;&#x2F;192.168.3.12&#x2F;D  &#x2F;mnt</span><br></pre></td></tr></table></figure></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;一. 安装Samba&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/sp</summary>
+      
+    
+    
+    
+    <category term="树莓派" scheme="http://weisunit.com/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+    
+    <category term="raspberrypi，Samba" scheme="http://weisunit.com/tags/raspberrypi%EF%BC%8CSamba/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>树莓派4部署Aria2做下载机</title>
+    <link href="http://weisunit.com/2020/09/16/%E6%A0%91%E8%8E%93%E6%B4%BE4%E9%83%A8%E7%BD%B2Aria2%E5%81%9A%E4%B8%8B%E8%BD%BD%E6%9C%BA/"/>
+    <id>http://weisunit.com/2020/09/16/%E6%A0%91%E8%8E%93%E6%B4%BE4%E9%83%A8%E7%BD%B2Aria2%E5%81%9A%E4%B8%8B%E8%BD%BD%E6%9C%BA/</id>
+    <published>2020-09-16T13:43:27.000Z</published>
+    <updated>2020-09-17T02:24:27.671Z</updated>
+    
+    <content type="html"><![CDATA[<p>一. Aria2<br>Aria2 是一个多平台轻量级，支持 HTTP、FTP、BitTorrent 等多协议、多来源的命令行下载工具。支持的协议是HTTP（S），FTP，SFTP，BitTorrent和Metalink。 aria2可以从多个来源/协议下载文件，并尝试利用最大下载带宽。它支持同时从HTTP（S）/ FTP / SFTP和BitTorrent下载文件，而从HTTP（S）/ FTP / SFTP下载的数据上传到BitTorrent群。使用Metalink的块校验和，aria2在下载BitTorren之类的文件时会自动验证数据块<br>Aria2官方项目地址：<a href="https://github.com/aria2/aria2">https://github.com/aria2/aria2</a></p><a id="more"></a><p>二. 安装<br>在网上有很多教程，我一直认为不必重复造轮子，在GitHub上搜索到<a href="https://github.com/P3TERX">P3TERX</a>基于Toyo (逗比) 大佬的一键安装脚本进行了再维护，可以说是很完美了，进一步降低了使用门槛。</p><ol><li><p>为了确保能正常使用，请先安装基础组件wget、curl、ca-certificates：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install wget curl ca-certificates</span><br></pre></td></tr></table></figure></li><li><p>下载脚本</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -N git.io&#x2F;aria2.sh &amp;&amp; chmod +x aria2.sh</span><br></pre></td></tr></table></figure></li><li><p>运行脚本</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;aria2.sh</span><br></pre></td></tr></table></figure></li><li><p>选择你要执行的选项 1为安装</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Aria2 一键安装管理脚本 增强版 [v2.7.0] by P3TERX.COM</span><br><span class="line"></span><br><span class="line">0. 升级脚本</span><br><span class="line">———————————————————————</span><br><span class="line">1. 安装 Aria2</span><br><span class="line">2. 更新 Aria2</span><br><span class="line">3. 卸载 Aria2</span><br><span class="line">———————————————————————</span><br><span class="line">4. 启动 Aria2</span><br><span class="line">5. 停止 Aria2</span><br><span class="line">6. 重启 Aria2</span><br><span class="line">———————————————————————</span><br><span class="line">7. 修改 配置</span><br><span class="line">8. 查看 配置</span><br><span class="line">9. 查看 日志</span><br><span class="line">10. 清空 日志</span><br><span class="line">———————————————————————</span><br><span class="line">11. 手动更新 BT-Tracker</span><br><span class="line">12. 自动更新 BT-Tracker</span><br><span class="line">———————————————————————</span><br><span class="line"></span><br><span class="line">Aria2 状态: 已安装 | 已启动</span><br><span class="line"></span><br><span class="line">自动更新 BT-Tracker: 已开启</span><br><span class="line"></span><br></pre></td></tr></table></figure></li><li><p>其他操作</p><p> 启动：<code>/etc/init.d/aria2 start | service aria2 start</code></p><p> 停止：<code>/etc/init.d/aria2 stop | service aria2 stop</code></p><p> 重启：<code>/etc/init.d/aria2 restart | service aria2 restart</code></p><p> 查看状态：<code>/etc/init.d/aria2 status | service aria2 status</code></p><p> 配置文件路径：<code>/root/.aria2c/aria2.conf </code>（配置文件有中文注释，若语言设置有问题会导致中文乱码）</p><p> 默认下载目录：<code>/root/downloads</code></p><p> RPC 密钥：随机生成，可使用选项7. 修改 配置文件自定义</p></li></ol><p>三. 图形化界面</p><p>推荐使用<a href="https://github.com/mayswind/AriaNg">AriaNg</a>，<a href="https://github.com/mayswind/AriaNg/releases">AriaNg</a> 现在提供三种版本, 标准版、单文件版和<a href="https://github.com/mayswind/AriaNg-Native/releases">AriaNg Native</a> . 标准版适合在 Web 服务器中部署, 提供资源缓存和按需加载的功能. 单文件版适合本地使用, 您下载后只要在浏览器中打开唯一的 html 文件即可. <a href="https://github.com/mayswind/AriaNg-Native/releases">AriaNg Native</a> 同样适合本地使用, 并且不需要使用浏览器.</p><p>类似于AriaNg-1.1.6-AllInOne.zip为单文件版，下载解压点击html文件即可用。<br>类似于AriaNg-1.1.6.zip为标准版，搭配nginx，Apache等服务器使用。<br>AriaNg Native为可执行系统软件，支持Windows和Macos。</p><ul><li>标准版部署如下<br>  下载安装包  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install nginx</span><br><span class="line">wget https:&#x2F;&#x2F;github.com&#x2F;mayswind&#x2F;AriaNg&#x2F;releases&#x2F;download&#x2F;1.1.6&#x2F;AriaNg-1.1.6.zip</span><br><span class="line">nano &#x2F;etc&#x2F;nginx&#x2F;sites-available&#x2F;default </span><br></pre></td></tr></table></figure>  server下添加  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">location &#x2F;aria2 &#123;</span><br><span class="line">    alias &#x2F;website&#x2F;AriaNg&#x2F;;</span><br><span class="line">    index index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>  创建文件夹  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;website&#x2F;AriaNg</span><br><span class="line">sudo unzip AriaNg-1.1.6.zip -d &#x2F;website&#x2F;AriaNg</span><br></pre></td></tr></table></figure>  重新启动  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart nginx</span><br><span class="line">sudo systemctl enable nginx</span><br></pre></td></tr></table></figure>访问<a href="http://ip/aria2%E5%8D%B3%E5%8F%AF">http://ip/aria2即可</a></li></ul><p>脚本执行完毕会有配置信息，其中RPC 端口 RPC 密钥 很重要，在AriaNg设置中RPC选项填写RPC密钥才可连接。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;一. Aria2&lt;br&gt;Aria2 是一个多平台轻量级，支持 HTTP、FTP、BitTorrent 等多协议、多来源的命令行下载工具。支持的协议是HTTP（S），FTP，SFTP，BitTorrent和Metalink。 aria2可以从多个来源/协议下载文件，并尝试利用最大下载带宽。它支持同时从HTTP（S）/ FTP / SFTP和BitTorrent下载文件，而从HTTP（S）/ FTP / SFTP下载的数据上传到BitTorrent群。使用Metalink的块校验和，aria2在下载BitTorren之类的文件时会自动验证数据块&lt;br&gt;Aria2官方项目地址：&lt;a href=&quot;https://github.com/aria2/aria2&quot;&gt;https://github.com/aria2/aria2&lt;/a&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="树莓派" scheme="http://weisunit.com/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+    
+    <category term="raspberrypi" scheme="http://weisunit.com/tags/raspberrypi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>上网科学Trojan-Go</title>
+    <link href="http://weisunit.com/2020/07/10/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6Trojan-Go/"/>
+    <id>http://weisunit.com/2020/07/10/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6Trojan-Go/</id>
+    <published>2020-07-10T03:31:52.000Z</published>
+    <updated>2020-08-29T12:46:35.689Z</updated>
+    
+    <content type="html"><![CDATA[<p>一. 简介</p><p>Trojan-Go是使用Go语言实现的完整的Trojan代理，和Trojan协议以及原版的配置文件格式兼容。支持并且兼容Trojan-GFW版本的绝大多数功能，并扩展了更多的实用功能。</p><p>Trojan-Go支持并且兼容原版Trojan的绝大多数功能，包括但不限于：</p><p>*TLS/SSL隧道传输</p><ul><li>透明代理 (NAT模式，iptables设置参见这里)</li><li>UDP代理</li><li>对抗GFW被动/主动检测的机制</li><li>MySQL数据库支持</li><li>流量统计，用户流量配额限制</li><li>从数据库中的用户列表进行认证</li></ul><p>同时，Trojan-Go还扩展了更多高效易用的功能特性：</p><ul><li>简易模式，快速部署使用</li><li>Socks5/HTTP代理自动适配</li><li>基于tproxy的透明代理(TCP/UDP)</li><li>多平台和多操作系统支持，无特殊依赖</li><li>基于多路复用(smux)降低延迟，提升并发性能</li><li>自定义路由模块，可实现国内直连/广告屏蔽等功能</li><li>Websocket传输支持，用于实现CDN流量中转(基于WebSocket over TLS/SSL)和对抗GFW中间人攻击</li><li>自动化HTTPS证书申请，从Let’s Encrypt自动申请和更新HTTPS证书</li><li>TLS指纹伪造，绕过GFW针对TLS Client Hello的特征识别</li><li>基于gRPC的API支持，支持动态用户管理和流量速度限制等</li><li>可插拔传输层，可将TLS替换为其他协议或明文传输。同时有完整的Shadowsocks混淆插件支持</li><li>支持对人类更友好的YAML配置文件格式</li></ul><p>二. 准备工作</p><p>1.VPS 一台（非生成环境）重置好干净的系统,新选配VPS可以看我之前的文章。<br>2.准备好一个域名，后台配置解析域名到上述VPS的IP,脚本运行时会需要填写域名。</p><p>三. 安装脚本</p><p>Trojan-Go由<a href="https://github.com/p4gefau1t/trojan-go">p4gefau1t</a>开发，并配有详细的<a href="https://p4gefau1t.github.io/trojan-go/">文档</a>。有一定动手能力的看文档部署即可。</p><p>这里我选择网友<a href="https://github.com/phlinhng/v2ray-tcp-tls-web">phlinhng</a>的安装脚本安装，脚本支持V2RAY TCP+TLS+WEB / WSS+CDN and Trojan-go的配置。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -sL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;phlinhng&#x2F;v2ray-tcp-tls-web&#x2F;master&#x2F;install.sh) &amp;&amp; v2script</span><br></pre></td></tr></table></figure><p>上面的命令将下载脚本，将其保存到/ usr / local / bin / v2script，使其可执行并启动。要在安装后再次运行该脚本，只需使用以下命令：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">v2script</span><br></pre></td></tr></table></figure><p>四. 客户端<br>理论上Trojan-Go和Trojan兼容，客户端可以通用，详细见<a href="https://weisunit.com/2020/05/31/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6Trojan/">上网科学Trojan</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;一. 简介&lt;/p&gt;
+&lt;p&gt;Trojan-Go是使用Go语言实现的完整的Trojan代理，和Trojan协议以及原版的配置文件格式兼容。支持并且兼容Trojan-GFW版本的绝大多数功能，并扩展了更多的实用功能。&lt;/p&gt;
+&lt;p&gt;Trojan-Go支持并且兼容原版Trojan的</summary>
+      
+    
+    
+    
+    <category term="科学上网" scheme="http://weisunit.com/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"/>
+    
+    
+    <category term="Trojan" scheme="http://weisunit.com/tags/Trojan/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>上网科学TCP加速</title>
+    <link href="http://weisunit.com/2020/05/31/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6TCP%E5%8A%A0%E9%80%9F/"/>
+    <id>http://weisunit.com/2020/05/31/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6TCP%E5%8A%A0%E9%80%9F/</id>
+    <published>2020-05-31T10:58:08.000Z</published>
+    <updated>2020-09-16T12:48:41.127Z</updated>
+    
+    <content type="html"><![CDATA[<p>一. 简介</p><p>BBR是Google推出的一套拥塞控制算法，集成在最新的Linux内核中。BBR应用在VPS服务器上，可以明显改善服务器的网络传输速度，减少丢包。<br>而BBR Plus版本，以及魔改版BBR，则是网友在原版BBR的基础上，对一些参数进行改良后的修正版本，比原版BBR有着更为显著的加速效果。至于两个改良版本哪个加速效果更好，大家可以分别安装测试，选取最适合自己的版本。下文会提供各版本的一键安装脚本。<br>锐速(ServerSpeeder)可以说是LotServer的马甲，是针对民用的，而LotServer则是针对企业用户的，锐速现在基本上已经关了，而这个LotServer还在持续运营。</p><a id="more"></a><p>二. 四合一脚本</p><p>本文介绍的BBR Plus一键安装脚本，来自网友<a href="https://github.com/chiakge/Linux-NetSpeed">chiakge</a>。除了BBR Plus外，还另外集成有原版BBR一键安装、魔改BBR一键安装、锐速（lotServer）一键安装，为四合一版本，四个版本可以切换使用。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate -O tcp.sh https:&#x2F;&#x2F;github.com&#x2F;chiakge&#x2F;Linux-NetSpeed&#x2F;raw&#x2F;master&#x2F;tcp.sh &amp;&amp; chmod +x tcp.sh &amp;&amp; .&#x2F;tcp.sh</span><br></pre></td></tr></table></figure><p>三. 注意事项</p><ol><li>本文介绍的四合一脚本中，4个加速工具都是TCP加速，可以为Shadowsocks/SSR/V2ray进行网络加速。</li><li>四个工具都涉及到内核的更改，加速效果不叠加。安装其中一版内核后，会自动替换上一版内核。</li><li>脚本菜单中的第9项，可以卸载全部加速效果。</li><li>脚本菜单中的第10项，可以对系统中的一些网络参数进行额外优化。</li><li>脚本运行过程中，如果出现选择提示，用方向键选No回车：</li><li>还是建议大家不要在生产环境中使用本脚本。</li></ol>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;一. 简介&lt;/p&gt;
+&lt;p&gt;BBR是Google推出的一套拥塞控制算法，集成在最新的Linux内核中。BBR应用在VPS服务器上，可以明显改善服务器的网络传输速度，减少丢包。&lt;br&gt;而BBR Plus版本，以及魔改版BBR，则是网友在原版BBR的基础上，对一些参数进行改良后的修正版本，比原版BBR有着更为显著的加速效果。至于两个改良版本哪个加速效果更好，大家可以分别安装测试，选取最适合自己的版本。下文会提供各版本的一键安装脚本。&lt;br&gt;锐速(ServerSpeeder)可以说是LotServer的马甲，是针对民用的，而LotServer则是针对企业用户的，锐速现在基本上已经关了，而这个LotServer还在持续运营。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="科学上网" scheme="http://weisunit.com/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"/>
+    
+    
+    <category term="BBR" scheme="http://weisunit.com/tags/BBR/"/>
+    
+    <category term="BBR Plus" scheme="http://weisunit.com/tags/BBR-Plus/"/>
+    
+    <category term="魔改BBR" scheme="http://weisunit.com/tags/%E9%AD%94%E6%94%B9BBR/"/>
+    
+    <category term="LotServer" scheme="http://weisunit.com/tags/LotServer/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>上网科学Trojan</title>
+    <link href="http://weisunit.com/2020/05/31/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6Trojan/"/>
+    <id>http://weisunit.com/2020/05/31/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6Trojan/</id>
+    <published>2020-05-31T09:37:53.000Z</published>
+    <updated>2020-05-31T12:57:48.495Z</updated>
+    
+    <content type="html"><![CDATA[<p>一. 简介</p><p>trojan是近两年兴起的网络工具，项目官网 <a href="https://github.com/trojan-gfw">github.com/trojan-gfw</a>。与强调加密和混淆的SS/SSR等工具不同，trojan将通信流量伪装成互联网上最常见的https流量，从而有效防止流量被检测和干扰。在敏感时期，基本上只有trojan和 v2ray伪装 能提供稳如狗的体验。</p><a id="more"></a><p>和v2ray相比，trojan有如下特点：</p><p>v2ray是一个网络框架，功能齐全；trojan只是一个绕过防火墙的工具，功能简单；<br>v2ray和trojan都能实现https流量伪装；<br>v2ray内核用go语言开发，trojan是c++实现，理论上trojan比v2ray性能更好；<br>v2ray名气大，使用的人多，客户端很好用；trojan关注和使用的人少，客户端简陋。</p><p>二. 准备工作</p><p>1.VPS 一台（非生成环境）重置好干净的系统,新选配VPS可以看我之前的文章。<br>2.准备好一个域名，后台配置解析域名到上述VPS的IP,脚本运行时会需要填写域名。</p><p>三. 一键安装脚本</p><p>这是Jrohy大神 GitHub 地址：<a href="https://github.com/Jrohy/trojan">https://github.com/Jrohy</a>.<br>功能</p><ul><li>在线web页面和命令行两种方式管理trojan多用户</li><li>启动 / 停止 / 重启 trojan 服务端</li><li>支持流量统计和流量限制</li><li>命令行模式管理, 支持命令补全</li><li>集成acme.sh证书申请</li><li>生成客户端配置文件</li><li>在线实时查看trojan日志</li><li>支持trojan://分享链接和二维码分享(二维码仅限web页面)</li></ul><p>稍稍还是有点复杂，<a href="https://github.com/V2RaySSR/Trojan_panel_web">V2RaySSR</a>又对其做了整合，增加了些新功能</p><ul><li>修改多用户面板管理界面的端口</li><li>安装并设置 Nginx</li><li>下载并自动部署伪装网站</li><li>BBR PLUS 四合一集成</li></ul><p>搭建Trojan服务，安装Trojan web管理面板，一键更改 Trojan-Panel 面板端口并设置伪装站点</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -N --no-check-certificate &quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;V2RaySSR&#x2F;Trojan_panel_web&#x2F;master&#x2F;trojan-web-panel.sh&quot; &amp;&amp; chmod +x trojan-web-panel.sh &amp;&amp; .&#x2F;trojan-web-panel.sh</span><br></pre></td></tr></table></figure><p>上面命令复制运行即可。</p><p>四. 客户端</p><p>Trojan-Qt5:<a href="https://github.com/Trojan-Qt5/Trojan-Qt5/releases">https://github.com/Trojan-Qt5/Trojan-Qt5/releases</a>(支持Windows，macOS，Linux)<br>相关插件<br>QT5 内核下载地址：<a href="https://github.com/v2ray/v2ray-core/releases">https://github.com/v2ray/v2ray-core/releases</a><br>QT5 Trojan 插件下载地址: <a href="https://github.com/Qv2ray/QvPlugin-Trojan/releases">https://github.com/Qv2ray/QvPlugin-Trojan/releases</a><br>QT5 SSR 插件下载地址: <a href="https://github.com/Qv2ray/QvPlugin-SSR/releases">https://github.com/Qv2ray/QvPlugin-SSR/releases</a><br>QT5 SS 插件下载地址:  <a href="https://github.com/shadowsocks/shadowsocks-qt5/releases">https://github.com/shadowsocks/shadowsocks-qt5/releases</a></p><p>IOS端：Shadowrocket小火箭，安装方法自行百度.<br>Shadowrocket 规则<a href="https://github.com/h2y/Shadowrocket-ADBlock-Rules">https://github.com/h2y/Shadowrocket-ADBlock-Rules</a></p><p>android端: igniter<a href="https://github.com/trojan-gfw/igniter">https://github.com/trojan-gfw/igniter</a></p><p>五.脚本其他功能命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Usage:</span><br><span class="line">  trojan [flags]</span><br><span class="line">  trojan [command]</span><br><span class="line"></span><br><span class="line">Available Commands:</span><br><span class="line">  add         添加用户</span><br><span class="line">  completion  自动命令补全(支持bash和zsh)</span><br><span class="line">  del         删除用户</span><br><span class="line">  help        Help about any command</span><br><span class="line">  info        用户信息列表</span><br><span class="line">  log         查看trojan日志</span><br><span class="line">  restart     重启trojan</span><br><span class="line">  start       启动trojan</span><br><span class="line">  status      查看trojan状态</span><br><span class="line">  stop        停止trojan</span><br><span class="line">  tls         证书安装</span><br><span class="line">  update      更新trojan</span><br><span class="line">  version     显示版本号</span><br><span class="line">  web         以web方式启动</span><br><span class="line"></span><br><span class="line">Flags:</span><br><span class="line">  -h, --help   help for trojan</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;一. 简介&lt;/p&gt;
+&lt;p&gt;trojan是近两年兴起的网络工具，项目官网 &lt;a href=&quot;https://github.com/trojan-gfw&quot;&gt;github.com/trojan-gfw&lt;/a&gt;。与强调加密和混淆的SS/SSR等工具不同，trojan将通信流量伪装成互联网上最常见的https流量，从而有效防止流量被检测和干扰。在敏感时期，基本上只有trojan和 v2ray伪装 能提供稳如狗的体验。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="科学上网" scheme="http://weisunit.com/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"/>
+    
+    
+    <category term="Trojan" scheme="http://weisunit.com/tags/Trojan/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>上网科学V2Ray</title>
+    <link href="http://weisunit.com/2019/12/18/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6V2Ray/"/>
+    <id>http://weisunit.com/2019/12/18/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6V2Ray/</id>
+    <published>2019-12-18T06:17:15.000Z</published>
+    <updated>2020-09-16T13:32:35.884Z</updated>
+    
+    <content type="html"><![CDATA[<p> 简介</p><p>V2Ray是Project V 的核心工具，Project V 是一个工具集合，它可以帮助你打造专属的基础通信网络。其主要负责网络协议和功能的实现，与其它 Project V 通信。V2Ray 可以单独运行，也可以和其它工具配合，以提供简便的操作流程。</p><a id="more"></a><p> 主要特性<br>多入口多出口: 一个 V2Ray 进程可并发支持多个入站和出站协议，每个协议可独立工作。<br>可定制化路由: 入站流量可按配置由不同的出口发出。轻松实现按区域或按域名分流，以达到最优的网络性能。<br>多协议支持: V2Ray 可同时开启多个协议支持，包括 Socks、HTTP、Shadowsocks、VMess 等。每个协议可单独设置传输载体，比如 TCP、mKCP、WebSocket 等。<br>隐蔽性: V2Ray 的节点可以伪装成正常的网站（HTTPS），将其流量与正常的网页流量混淆，以避开第三方干扰。<br>反向代理: 通用的反向代理支持，可实现内网穿透功能。<br>多平台支持: 原生支持所有常见平台，如 Windows、Mac OS、Linux，并已有第三方支持移动平台。</p><p>综合以上我们了解到v2ray最大的优点就是有很高的隐蔽性，能够伪装成网站浏览，bt下载等，这样能最大限度避开深度包检测，增大存活几率。</p><p> 服务器选择</p><p>看我之前的<a href="https://weisunit.com/2019/08/07/%E6%88%91%E6%90%AD%E5%BB%BA%E6%9C%BA%E5%9C%BA%E7%9A%84%E5%BF%83%E5%BE%97/">帖子</a></p><p> 有一定技术能力的用户看这里</p><p>详情访问官网<a href="www.v2ray.com">www.v2ray.com</a>,里面有详细的文档。<br>安装并不困难，访问<a href="https://www.v2ray.com/chapter_00/install.html">https://www.v2ray.com/chapter_00/install.html</a>,难点是<a href="https://www.v2ray.com/chapter_02/">配置文件</a>的部署,我也在学习中，毕竟大多人都是小白用户，不想操那么多的闲心，有研究精神的直接看官方文档吧，我就不误人子弟了。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -L -s https:&#x2F;&#x2F;install.direct&#x2F;go.sh)</span><br></pre></td></tr></table></figure><p> 小白用户看这里</p><p>这里感谢<a href="https://github.com/233boy?tab=repositories">233boy</a>这位大神，编写了一键部署脚本并为小白用户写了详细文档，详细地址访问<a href="https://github.com/233boy/v2ray/wiki/V2Ray%E6%90%AD%E5%BB%BA%E8%AF%A6%E7%BB%86%E5%9B%BE%E6%96%87%E6%95%99%E7%A8%8B">V2Ray搭建详细图文教程</a>,从购买vps，到登录，到部署，非常详细，我写这篇文章主要就是省去大家Google的麻烦。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -s -L https:&#x2F;&#x2F;git.io&#x2F;v2ray.sh)</span><br></pre></td></tr></table></figure><p> 客户端</p><p>windows客户端：<a href="https://github.com/2dust/v2rayN/releases">v2rayN</a><br>               <a href="https://github.com/Cenmrev/V2RayW/releases">V2RayW</a><br>mac客户端：<a href="https://github.com/Cenmrev/V2RayX">V2RayX</a><br>            <a href="https://github.com/yanue/V2rayU">V2rayU</a><br>Android客户端：<a href="https://github.com/2dust/v2rayNG">v2rayNG</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt; 简介&lt;/p&gt;
+&lt;p&gt;V2Ray是Project V 的核心工具，Project V 是一个工具集合，它可以帮助你打造专属的基础通信网络。其主要负责网络协议和功能的实现，与其它 Project V 通信。V2Ray 可以单独运行，也可以和其它工具配合，以提供简便的操作流程。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="科学上网" scheme="http://weisunit.com/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"/>
+    
+    
+    <category term="v2ray" scheme="http://weisunit.com/tags/v2ray/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>上网科学心得SS,SSR</title>
+    <link href="http://weisunit.com/2019/12/08/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6%E5%BF%83%E5%BE%97SS,SSR/"/>
+    <id>http://weisunit.com/2019/12/08/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6%E5%BF%83%E5%BE%97SS,SSR/</id>
+    <published>2019-12-08T03:14:13.000Z</published>
+    <updated>2020-09-16T13:35:23.815Z</updated>
+    
+    <content type="html"><![CDATA[<p> 一 VPS的选择<br>首先根据自己的预算等考量选择一个国外靠谱的相对便宜的VPS提供商，一般考量以下几点<br>1.地点（理论上离大陆越近延迟最低，像香港，日本，韩国等）<br>2.费用（配置不需要太高，1核0.5内存就够用了，亚洲的普遍费用高一些）<br>3.带宽（当然是越大越好，普遍为100M，还有很多运营商提供1Gbps）<br>4.流量（这个看运营商，套餐等，无限制当然是最好的）</p><a id="more"></a><p>VPS推荐:<br>aws lightsail: <a href="https://lightsail.aws.amazon.com/">https://lightsail.aws.amazon.com</a><br>最低3.5美元一个月，1T流量<br>vultr：<a href="https://www.vultr.com/">https://www.vultr.com</a><br>最低2.5美元一个月，提供日本，新加坡，美国，澳大利亚等地VPS<br>justhost: <a href="https://justhost.ru/hosting/">https://justhost.ru/hosting/</a><br>俄罗斯运营商，很便宜，最低配换算人民币10多块一月左右<br> 二 脚本搭建<br>网络上有很多教程，大体差不多，我用的doubi的一键安装脚本，很容易,项目地址<br>GitHub: <a href="https://github.com/ToyoDAdoubi/doubi">https://github.com/ToyoDAdoubi/doubi</a></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -N --no-check-certificate https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;ToyoDAdoubi&#x2F;doubi&#x2F;master&#x2F;ssrmu.sh &amp;&amp; chmod +x ssrmu.sh &amp;&amp; bash ssrmu.sh</span><br></pre></td></tr></table></figure><p> 三 客户端</p><p>Windows客户端：ss <a href="https://github.com/shadowsocks/shadowsocks-windows/releases">https://github.com/shadowsocks/shadowsocks-windows/releases</a><br>ssr <a href="https://github.com/shadowsocksrr/shadowsocksr-csharp/releases">https://github.com/shadowsocksrr/shadowsocksr-csharp/releases</a></p><p>android客户端：ss <a href="https://github.com/shadowsocks/shadowsocks-android/releases">https://github.com/shadowsocks/shadowsocks-android/releases</a><br>ssr <a href="https://github.com/shadowsocksrr/shadowsocksr-android/releases">https://github.com/shadowsocksrr/shadowsocksr-android/releases</a></p><p>mac客户端：<a href="https://github.com/shadowsocks/ShadowsocksX-NG/releases">https://github.com/shadowsocks/ShadowsocksX-NG/releases</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt; 一 VPS的选择&lt;br&gt;首先根据自己的预算等考量选择一个国外靠谱的相对便宜的VPS提供商，一般考量以下几点&lt;br&gt;1.地点（理论上离大陆越近延迟最低，像香港，日本，韩国等）&lt;br&gt;2.费用（配置不需要太高，1核0.5内存就够用了，亚洲的普遍费用高一些）&lt;br&gt;3.带宽（当然是越大越好，普遍为100M，还有很多运营商提供1Gbps）&lt;br&gt;4.流量（这个看运营商，套餐等，无限制当然是最好的）&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="科学上网" scheme="http://weisunit.com/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"/>
+    
+    
+    <category term="shadowsocks" scheme="http://weisunit.com/tags/shadowsocks/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux 账户建立和免密登录设置</title>
+    <link href="http://weisunit.com/2019/11/21/Linux-%E8%B4%A6%E6%88%B7%E5%BB%BA%E7%AB%8B%E5%92%8C%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E8%AE%BE%E7%BD%AE/"/>
+    <id>http://weisunit.com/2019/11/21/Linux-%E8%B4%A6%E6%88%B7%E5%BB%BA%E7%AB%8B%E5%92%8C%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E8%AE%BE%E7%BD%AE/</id>
+    <published>2019-11-21T04:02:56.000Z</published>
+    <updated>2020-05-30T01:14:39.432Z</updated>
+    
+    <content type="html"><![CDATA[<p>一.Linux 账户建立</p><ol><li>设好username，rsa变量</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username&#x3D;test</span><br><span class="line">rsa&#x3D;&quot;ssh-rsa ************&quot;</span><br></pre></td></tr></table></figure><ol start="2"><li>建立用户组：</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;sbin&#x2F;groupadd $username</span><br></pre></td></tr></table></figure><a id="more"></a><ol start="3"><li>创建用户：</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;sbin&#x2F;useradd -g $username $username -s &#x2F;bin&#x2F;bash -b &#x2F;home&#x2F;$username</span><br></pre></td></tr></table></figure><ol start="4"><li>导入rsa</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir -pm 700 &#x2F;home&#x2F;$username&#x2F;.ssh</span><br><span class="line">chmod 700 -R &#x2F;home&#x2F;$username</span><br><span class="line">echo $rsa &gt; &#x2F;home&#x2F;$username&#x2F;.ssh&#x2F;authorized_keys</span><br><span class="line">chmod 600 &#x2F;home&#x2F;$username&#x2F;.ssh&#x2F;authorized_keys</span><br></pre></td></tr></table></figure><ol start="5"><li>赋予权限</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chown $username:$username -R &#x2F;home&#x2F;$username</span><br><span class="line"></span><br></pre></td></tr></table></figure><ol start="6"><li><p>ssh禁止root登录</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config</span><br><span class="line">PermitRootLogin no</span><br><span class="line">service sshd restart</span><br></pre></td></tr></table></figure></li><li><p>sudo权限</p></li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;第一步 找到sudoers文件whereis sudoers</span><br><span class="line">&#x2F;&#x2F;第二步 获取修改权限</span><br><span class="line">chmod 777 &#x2F;etc&#x2F;sudoers</span><br><span class="line">&#x2F;&#x2F;第三步 打开文件并编辑</span><br><span class="line">vim &#x2F;etc&#x2F;sudoers</span><br><span class="line">&#x2F;&#x2F;找到root    ALL&#x3D;(ALL)    ALL一行 在下面添加新增的用户按照root的格式</span><br><span class="line">username    ALL&#x3D;(ALL)       NOPASSWD: ALL</span><br><span class="line">&#x2F;&#x2F;保存退出</span><br><span class="line">:wq</span><br><span class="line">&#x2F;&#x2F;第四步 修改权限为只读</span><br><span class="line">chmod 444 &#x2F;etc&#x2F;sudoers</span><br><span class="line">&#x2F;&#x2F;最后一步 刷新权限</span><br><span class="line">systemctl restart sshd</span><br></pre></td></tr></table></figure><p>或是命令visudo修改。</p><p>二 .ssh copy rsa的另一种方法</p><ol><li>使用ssh-keygen在本机上生成密钥：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;weisunit@gmail.com&quot;</span><br></pre></td></tr></table></figure></li><li>使用ssh-copy-id命令将本机上的公钥文件拷贝到服务器上<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i ~&#x2F;.ssh&#x2F;id_rsa.pub sunwei@192.168.3.105</span><br></pre></td></tr></table></figure></li></ol><p>若服务器端远程登录ssh的端口号被更改了(比如为3330)，则命令应改为这样：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i ~&#x2F;.ssh&#x2F;id_rsa.pub “-p 3330 sunwei@192.168.3.105“</span><br></pre></td></tr></table></figure><p>三. 限制IP访问</p><p>如果是想禁用某个IP的是否能够连接与否，则要使用<code>/etc/host.allow</code>和<code>/etc/host.deny</code>两个文件，deny文件是阻止IP文件，allow是允许文件。规则是先匹配deny，而后匹配allow，因此，allow中的文件会覆盖deny中的文件规则：</p><p><code>/etc/host.deny</code> 文件中我们禁止所有的IP连接<br><code>sshd:ALL</code>  所有IP都被禁止SSH到本机</p><p><code>/etc/host.allow</code>文件中我们允许指定的IP连接<br><code>sshd:192.168.128.183:allow</code></p><p>两个文件的规则最终变成：<br>仅允许192.168.128.183连接到本机.<br>修改后，文件立即生效，对于当前已经运行的程序不生效，为了防止出现不必要的麻烦，建议还是先修改<code>host.allow</code>，而后再修改<code>host.deny</code>文件，这样能保证<code>host.allow</code>中的IP能够访问sshd进程.</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;一.Linux 账户建立&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;设好username，rsa变量&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;username&amp;#x3D;test&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;rsa&amp;#x3D;&amp;quot;ssh-rsa ************&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;建立用户组：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;#x2F;usr&amp;#x2F;sbin&amp;#x2F;groupadd $username&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
+    
+    
+    
+    <category term="Liunx" scheme="http://weisunit.com/categories/Liunx/"/>
+    
+    
+    <category term="linux" scheme="http://weisunit.com/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>各品牌主板进入启动菜单选择项的快捷键</title>
+    <link href="http://weisunit.com/2019/11/20/%E5%90%84%E5%93%81%E7%89%8C%E8%BF%9B%E5%85%A5%E5%90%AF%E5%8A%A8%E8%8F%9C%E5%8D%95%E9%80%89%E6%8B%A9%E9%A1%B9%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE/"/>
+    <id>http://weisunit.com/2019/11/20/%E5%90%84%E5%93%81%E7%89%8C%E8%BF%9B%E5%85%A5%E5%90%AF%E5%8A%A8%E8%8F%9C%E5%8D%95%E9%80%89%E6%8B%A9%E9%A1%B9%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE/</id>
+    <published>2019-11-20T09:07:04.000Z</published>
+    <updated>2020-05-30T01:34:58.439Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://i.loli.net/2019/08/14/KMu4qPUA13o9mcj.png" alt="kuaijiejian.png"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://i.loli.net/2019/08/14/KMu4qPUA13o9mcj.png&quot; alt=&quot;kuaijiejian.png&quot;&gt;&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="windows" scheme="http://weisunit.com/categories/windows/"/>
+    
+    
+    <category term="主板" scheme="http://weisunit.com/tags/%E4%B8%BB%E6%9D%BF/"/>
+    
+    <category term="快捷键" scheme="http://weisunit.com/tags/%E5%BF%AB%E6%8D%B7%E9%94%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MacOs打印机连接说明</title>
+    <link href="http://weisunit.com/2019/11/19/MacOs%E6%89%93%E5%8D%B0%E6%9C%BA%E8%BF%9E%E6%8E%A5%E8%AF%B4%E6%98%8E/"/>
+    <id>http://weisunit.com/2019/11/19/MacOs%E6%89%93%E5%8D%B0%E6%9C%BA%E8%BF%9E%E6%8E%A5%E8%AF%B4%E6%98%8E/</id>
+    <published>2019-11-19T02:36:26.000Z</published>
+    <updated>2020-05-30T01:21:51.758Z</updated>
+    
+    <content type="html"><![CDATA[<p>一 打开系统偏好设置，点击打印机与扫描仪<br><img src="https://i.loli.net/2019/11/19/OGVXKieqZFcrzLE.png" alt="1.png"></p><a id="more"></a><p>二 点击加号添加，点击IP<br><img src="https://i.loli.net/2019/11/19/kpM1PzeWVA2oByK.png" alt="3.png"></p><p>三 填写打印机内网IP（需在同一个局域网下），之后会自动寻找合适驱动<br><img src="https://i.loli.net/2019/11/19/4AJ1ENb7RqOBgQU.png" alt="4.png"></p><p>四 点击添加，自动下载所需文件<br><img src="https://i.loli.net/2019/11/19/PZVdJ19eb2I4L3j.png" alt="5.png"></p><p>五 完成<br><img src="https://i.loli.net/2019/11/19/KQnhkwEgaAOfC4M.png" alt="6.png"></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;一 打开系统偏好设置，点击打印机与扫描仪&lt;br&gt;&lt;img src=&quot;https://i.loli.net/2019/11/19/OGVXKieqZFcrzLE.png&quot; alt=&quot;1.png&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="MacOS" scheme="http://weisunit.com/categories/MacOS/"/>
+    
+    
+    <category term="打印机" scheme="http://weisunit.com/tags/%E6%89%93%E5%8D%B0%E6%9C%BA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MacOs配置VPN的方法</title>
+    <link href="http://weisunit.com/2019/11/19/MacOs%E9%85%8D%E7%BD%AEVPN%E7%9A%84%E6%96%B9%E6%B3%95/"/>
+    <id>http://weisunit.com/2019/11/19/MacOs%E9%85%8D%E7%BD%AEVPN%E7%9A%84%E6%96%B9%E6%B3%95/</id>
+    <published>2019-11-19T02:21:12.000Z</published>
+    <updated>2020-05-30T01:24:10.199Z</updated>
+    
+    <content type="html"><![CDATA[<p>一 打开系统偏好设置<br><img src="https://i.loli.net/2019/11/19/pTCN8x4ijlgncSW.png" alt="1.png"></p><a id="more"></a><p>二 点击网络<br><img src="https://i.loli.net/2019/11/19/e8cA4RQLwxBjXiF.png" alt="2.png"></p><p>三 点击左侧加号添加，接口选择VPN，类型按需选择，一般为L2TP，点击创建<br><img src="https://i.loli.net/2019/11/19/PjbluJza2FLnW8m.png" alt="3.png"></p><p>四 填写服务器地址和账户名称<br><img src="https://i.loli.net/2019/11/19/qtI4TuEyFNiABR9.png" alt="4.png"></p><p>五 点击鉴定设置<br><img src="https://i.loli.net/2019/11/19/OGhD8fXey1rgsml.png" alt="5.png"></p><p>六 按需配置，一般为填写密码和共享秘钥，点击好<br><img src="https://i.loli.net/2019/11/19/r5GZhKe7kWvE6Cz.png" alt="6.png"></p><p>七 点击高级系统设置<br><img src="https://i.loli.net/2019/11/19/Vle6gBqStUr4P7D.png" alt="7.png"></p><p>八 通过VPN连接发送所有流量勾选<br><img src="https://i.loli.net/2019/11/19/BUkJgeA5OR98Wus.png" alt="8.png"></p><p>  点击好就完成了</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;一 打开系统偏好设置&lt;br&gt;&lt;img src=&quot;https://i.loli.net/2019/11/19/pTCN8x4ijlgncSW.png&quot; alt=&quot;1.png&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="MacOS" scheme="http://weisunit.com/categories/MacOS/"/>
+    
+    
+    <category term="VPN" scheme="http://weisunit.com/tags/VPN/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>windows10内置VPN连接方法</title>
+    <link href="http://weisunit.com/2019/11/18/windows10%E5%86%85%E7%BD%AEVPN%E8%BF%9E%E6%8E%A5%E6%96%B9%E6%B3%95/"/>
+    <id>http://weisunit.com/2019/11/18/windows10%E5%86%85%E7%BD%AEVPN%E8%BF%9E%E6%8E%A5%E6%96%B9%E6%B3%95/</id>
+    <published>2019-11-18T03:33:48.000Z</published>
+    <updated>2020-05-30T01:24:43.450Z</updated>
+    
+    <content type="html"><![CDATA[<p>  一 打开windows设置》网络和Internet<br><img src="https://i.loli.net/2019/11/18/kNOA2Vz78upLmWv.png" alt="1.png"></p><a id="more"></a><p>  二 左侧选项点击VPN，进入VPN选项点击添加VPN连接<br><img src="https://i.loli.net/2019/11/18/xOyWRa43iA7Xtnu.png" alt="17470306346073.png"></p><p>  三 VPN提供商选择 Windows（内置），填好名称和目标服务器名称或地址<br><img src="https://i.loli.net/2019/11/18/1H4GzDlox2pciAS.png" alt="2.png"></p><p>  四 选择VPN类型，一般常用PPTP或L2TP(联系管理员得到详细配置)<br><img src="https://i.loli.net/2019/11/18/qfzeJX9ok4dyvOl.png" alt="3.png"></p><p>  五 选择登录信息类型，一般为用户名和密码<br><img src="https://i.loli.net/2019/11/18/5Ed6MukroU4P3J8.png" alt="4.png"></p><p>  六 填好用户名和密码，点击保存<br><img src="https://i.loli.net/2019/11/18/ENZHat8O4bDkUuP.png" alt="5.png"></p><p>  七 保存好就可以连接了！<br><img src="https://i.loli.net/2019/11/18/w79OpfUq5TlPiZ1.png" alt="6.png"></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;  一 打开windows设置》网络和Internet&lt;br&gt;&lt;img src=&quot;https://i.loli.net/2019/11/18/kNOA2Vz78upLmWv.png&quot; alt=&quot;1.png&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="windows" scheme="http://weisunit.com/categories/windows/"/>
+    
+    
+    <category term="VPN" scheme="http://weisunit.com/tags/VPN/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Windows10.19H2.Version1909.Build.18363.418MSDN镜像下载</title>
+    <link href="http://weisunit.com/2019/11/12/Windows10-19H2-Version1909-Build-18363-418MSDN%E9%95%9C%E5%83%8F%E4%B8%8B%E8%BD%BD/"/>
+    <id>http://weisunit.com/2019/11/12/Windows10-19H2-Version1909-Build-18363-418MSDN%E9%95%9C%E5%83%8F%E4%B8%8B%E8%BD%BD/</id>
+    <published>2019-11-12T03:09:02.000Z</published>
+    <updated>2020-05-30T01:29:55.054Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://i.loli.net/2019/08/07/2xjF7MVaOp4kg8t.jpg" alt="1c7c85002fd6b3b5.jpg"></p><p>消费者版（内含家庭版、家庭单语言版、教育版、专业版、专业教育版、专业工作站版）：</p><p>64位：</p><p>文件名：cn_windows_10_business_editions_version_1909_x64_dvd_0ca83907.iso<br>SHA1：a153526cdd406a249a93f30b447b259fed560c1d<br>文件大小：4.91GB<br>发布时间：2019-10-16<br>下载地址：</p><p><a href="ed2k://|file|cn_windows_10_business_editions_version_1909_x64_dvd_0ca83907.iso|5275090944|9BCD5FA6C8009E4D0260E4B23008BD47|/">ed2k://|file|cn_windows_10_business_editions_version_1909_x64_dvd_0ca83907.iso|5275090944|9BCD5FA6C8009E4D0260E4B23008BD47|/</a></p><a id="more"></a><p>32位：</p><p>文件名：cn_windows_10_business_editions_version_1909_x86_dvd_09290f8c.iso<br>SHA1：4c4832aaf2bc04af8c82d01d1319c93a9ff9813d<br>文件大小：3.52GB<br>发布时间：2019-10-16<br>下载地址：</p><p><a href="ed2k://|file|cn_windows_10_business_editions_version_1909_x86_dvd_09290f8c.iso|3781249024|7C60A943AE1D8AE6B5F72743D2E74EE2|/">ed2k://|file|cn_windows_10_business_editions_version_1909_x86_dvd_09290f8c.iso|3781249024|7C60A943AE1D8AE6B5F72743D2E74EE2|/</a></p><p>商业版（内含教育版、企业版、专业版、专业教育版、专业工作站版）：</p><p>64位：</p><p>文件名：cn_windows_10_consumer_editions_version_1909_x64_dvd_76365bf8.iso<br>SHA1：5f3c8e743c9e87bdefdaabb49bbd0d7aa9221e7a<br>文件大小：5.01GB<br>发布时间：2019-10-16<br>下载地址：</p><p><a href="ed2k://|file|cn_windows_10_consumer_editions_version_1909_x64_dvd_76365bf8.iso|5381154816|6A56DE112B164EC054D1104C53F8F10B|/">ed2k://|file|cn_windows_10_consumer_editions_version_1909_x64_dvd_76365bf8.iso|5381154816|6A56DE112B164EC054D1104C53F8F10B|/</a></p><p>32位：</p><p>文件名：cn_windows_10_consumer_editions_version_1909_x86_dvd_08dd0d3c.iso<br>SHA1：3e887474610875781bcb385f300073d2e01d7668<br>文件大小：3.59GB<br>发布时间：2019-10-16<br>下载地址：</p><p><a href="ed2k://|file|cn_windows_10_consumer_editions_version_1909_x86_dvd_08dd0d3c.iso|3859558400|40991568D016CCBAEE1E67CD38FAABE8|/">ed2k://|file|cn_windows_10_consumer_editions_version_1909_x86_dvd_08dd0d3c.iso|3859558400|40991568D016CCBAEE1E67CD38FAABE8|/</a></p><p>长期支持版（Windows10 LTSC 2019，原LTSB）：</p><p>64位：</p><p>文件名：cn_windows_10_enterprise_ltsc_2019_x64_dvd_9c09ff24.iso<br>SHA1：24b59706d5eded392423936c82ba5a83596b50cc<br>文件大小：4.17GB<br>发布时间：2019-03-15<br>下载地址：</p><p><a href="ed2k://|file|cn_windows_10_enterprise_ltsc_2019_x64_dvd_9c09ff24.iso|4478906368|E7C526499308841A4A6D116C857DB669|/">ed2k://|file|cn_windows_10_enterprise_ltsc_2019_x64_dvd_9c09ff24.iso|4478906368|E7C526499308841A4A6D116C857DB669|/</a></p><p>32位：</p><p>文件名：cn_windows_10_enterprise_ltsc_2019_x86_dvd_1814dbab.iso<br>SHA1：ba2169edd94f123211cd4aaca68352f1ab6195d9<br>文件大小：2.98GB<br>发布时间：2019-03-15<br>下载地址：</p><p><a href="ed2k://|file|cn_windows_10_enterprise_ltsc_2019_x86_dvd_1814dbab.iso|3196803072|2D39C54A2E99BAC308191C74A15B3237|/">ed2k://|file|cn_windows_10_enterprise_ltsc_2019_x86_dvd_1814dbab.iso|3196803072|2D39C54A2E99BAC308191C74A15B3237|/</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://i.loli.net/2019/08/07/2xjF7MVaOp4kg8t.jpg&quot; alt=&quot;1c7c85002fd6b3b5.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;消费者版（内含家庭版、家庭单语言版、教育版、专业版、专业教育版、专业工作站版）：&lt;/p&gt;
+&lt;p&gt;64位：&lt;/p&gt;
+&lt;p&gt;文件名：cn_windows_10_business_editions_version_1909_x64_dvd_0ca83907.iso&lt;br&gt;SHA1：a153526cdd406a249a93f30b447b259fed560c1d&lt;br&gt;文件大小：4.91GB&lt;br&gt;发布时间：2019-10-16&lt;br&gt;下载地址：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;ed2k://|file|cn_windows_10_business_editions_version_1909_x64_dvd_0ca83907.iso|5275090944|9BCD5FA6C8009E4D0260E4B23008BD47|/&quot;&gt;ed2k://|file|cn_windows_10_business_editions_version_1909_x64_dvd_0ca83907.iso|5275090944|9BCD5FA6C8009E4D0260E4B23008BD47|/&lt;/a&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="windows" scheme="http://weisunit.com/categories/windows/"/>
+    
+    
+    <category term="windows10" scheme="http://weisunit.com/tags/windows10/"/>
+    
+    <category term="iso" scheme="http://weisunit.com/tags/iso/"/>
+    
+    <category term="镜像" scheme="http://weisunit.com/tags/%E9%95%9C%E5%83%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>网线线序图</title>
+    <link href="http://weisunit.com/2019/09/12/%E7%BD%91%E7%BA%BF%E7%BA%BF%E5%BA%8F%E5%9B%BE/"/>
+    <id>http://weisunit.com/2019/09/12/%E7%BD%91%E7%BA%BF%E7%BA%BF%E5%BA%8F%E5%9B%BE/</id>
+    <published>2019-09-12T09:43:02.000Z</published>
+    <updated>2019-09-12T09:45:11.154Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://i.loli.net/2019/09/12/scPmTl1w8aKgX2e.png"></p><a id="more"></a><p><img src="https://i.loli.net/2019/09/12/7HEAM65xs3Broez.jpg"></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://i.loli.net/2019/09/12/scPmTl1w8aKgX2e.png&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="网络" scheme="http://weisunit.com/categories/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+    <category term="网线" scheme="http://weisunit.com/tags/%E7%BD%91%E7%BA%BF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AD域服务：组策略</title>
+    <link href="http://weisunit.com/2019/09/11/AD%E5%9F%9F%E6%9C%8D%E5%8A%A1%EF%BC%9A%E7%BB%84%E7%AD%96%E7%95%A5/"/>
+    <id>http://weisunit.com/2019/09/11/AD%E5%9F%9F%E6%9C%8D%E5%8A%A1%EF%BC%9A%E7%BB%84%E7%AD%96%E7%95%A5/</id>
+    <published>2019-09-11T07:43:12.000Z</published>
+    <updated>2020-05-30T01:26:18.878Z</updated>
+    
+    <content type="html"><![CDATA[<p>组策略中包含两部分：</p><pre><code> 1 计算机配置：针对计算机的配置，只在计算机上生效。计算机启动的时候应用，在出现登录界面前。 2 用户配置：针对用户的配置，只在所有用户帐户上生效。用户登录后应用。</code></pre><p> 多元密码策略</p><ol><li><p>打开“Active Directory 管理中心”，点击“管理”选择“添加导航节点”<br><img src="https://i.loli.net/2019/09/11/9GuW2DtMbp1LqOQ.png" alt="15.png"></p><a id="more"></a></li><li><p>选择“system”——“Password Settings Container”，然后选择“&gt;&gt;”添加，最后选择“确定”<br><img src="https://i.loli.net/2019/09/11/5Nom8uCxl3jG9Mp.png" alt="16.png"></p></li><li><p>选择刚刚添加的节点，右击右边空白的地方（直接右击新的节点也可以），选择“新建”——“密码设置”<br><img src="https://i.loli.net/2019/09/11/xcVbHKqnfgGTi3N.png" alt="17.png"></p></li><li><p>输入密码策略的名称和优先级，勾选相应的密码策略（我这里什么也没有勾，也就是什么策略也没有）；然后选择“添加”.<br><img src="https://i.loli.net/2019/09/11/GmElhYAVSwexQLU.png" alt="18.png"></p></li><li><p>输入用户名（我这里测试的是test1），选择“检查名称”名称正确的话，下面会多一条横杠；当然也可以选择“高级”通过搜索来搜索用户名；然后选择“确定”<br><img src="https://i.loli.net/2019/09/11/46YPnjzsywgEhTb.png" alt="19.png"></p></li><li><p>新建好策略后，可以在右边看到.<br><img src="https://i.loli.net/2019/09/11/3clwFLjBEzmDaZH.png" alt="20.png"></p></li></ol><p>7.测试更改“test1”的密码为“1”，提示密码已经更改成功，表示策略生效。</p><p> 账户锁定策略</p><ol><li><p>打开组策略管理器，右击域策略，选择“编辑”<br><img src="https://i.loli.net/2019/09/11/od8enDpftzajZLS.png" alt="21.png"></p></li><li><p>依次展开：“计算机配置——策略——Windows 设置——安全设置——账户锁定策略”<br><img src="https://i.loli.net/2019/09/11/vLhPBs1Vf7oa82u.png" alt="22.png"></p></li><li><p>双击“账户锁定时间”，打开账户锁定时间属性，勾选“定义此策略设置”（默认是没有定义），输入合适的时间；然后选择“确定”。<br><img src="https://i.loli.net/2019/09/11/LyFHefRYWNgXsqU.png" alt="23.png"></p></li><li><p>在选择“确定”时，会有建议其他数字改动的对话框，选择“确定”就可以了，如果需要修改这些，可以双击需要修改的选项，然后选择合适的值就可以了<br><img src="https://i.loli.net/2019/09/11/CNyivSnIz9gVkFY.png" alt="24.png"></p><p>软件限制策略</p></li><li><p>打开“组策略管理器”，新建了一条组策略，右击你想要创建组策略的OU“test”，选择“在这个域中创建GPO并在此处链接”<br><img src="https://i.loli.net/2019/09/11/WmJqseZDYMGuCAN.png" alt="25.png"></p></li><li><p>在名称输入框内，给该策略新建一个名称；<br><img src="https://i.loli.net/2019/09/11/sHr1eaVlMY6AI2h.png" alt="26.png"></p></li><li><p>新建策略之后，对策略进行编辑，右击刚刚创建的策略“软件限制”并选择“编辑”；<br><img src="https://i.loli.net/2019/09/11/wM7SR4P3sudxHhT.png" alt="27.png"></p></li><li><p>打开“组策略管理编辑器”，展开“计算机配置—策略—Windows 设置—安全设置—软件限制策略”，你可以看到此时的状态是“没有定义软件限制策略”；右击“软件限制策略”并选择“创建软件限制策略”<br><img src="https://i.loli.net/2019/09/11/Ay2U8ORDY4pZwcK.png" alt="28.png"></p></li><li><p>默认情况下，所有软件都是不受限制的，但有些要求严格的环境下，只允许特定软件运行，这时可以双击不允许，设为默认，再编辑规则，根据实际情况而定，本次不做修改<br><img src="https://i.loli.net/2019/09/11/j9IJHgovmFN78Ah.png" alt="29.png"></p></li><li><p>选择“新建路径规则”<br><img src="https://i.loli.net/2019/09/11/YjPt7BznhRieu9Q.png" alt="30.png"></p></li><li><p>打开新建路径规则对话框，选择“浏览”；找到对应的路径，选择“确定”；<br><img src="https://i.loli.net/2019/09/11/GuXiSAEr75cZg13.png" alt="31.png"></p></li></ol><p>注意：修改组策略后，不是立即生效的，需要我们手动强制刷新，在cmd下输入<code>gpupdate  /force</code>；当然你也可以通过重启来刷新组策略。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;组策略中包含两部分：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; 1 计算机配置：针对计算机的配置，只在计算机上生效。计算机启动的时候应用，在出现登录界面前。
+
+ 2 用户配置：针对用户的配置，只在所有用户帐户上生效。用户登录后应用。&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt; 多元密码策略&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;打开“Active Directory 管理中心”，点击“管理”选择“添加导航节点”&lt;br&gt;&lt;img src=&quot;https://i.loli.net/2019/09/11/9GuW2DtMbp1LqOQ.png&quot; alt=&quot;15.png&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="windows server" scheme="http://weisunit.com/categories/windows-server/"/>
+    
+    
+    <category term="Active Directory" scheme="http://weisunit.com/tags/Active-Directory/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AD域服务：用户</title>
+    <link href="http://weisunit.com/2019/09/10/AD%E5%9F%9F%E6%9C%8D%E5%8A%A1%EF%BC%9A%E7%94%A8%E6%88%B7/"/>
+    <id>http://weisunit.com/2019/09/10/AD%E5%9F%9F%E6%9C%8D%E5%8A%A1%EF%BC%9A%E7%94%A8%E6%88%B7/</id>
+    <published>2019-09-10T07:01:51.000Z</published>
+    <updated>2020-05-30T01:26:41.638Z</updated>
+    
+    <content type="html"><![CDATA[<p> 一 使用Windows界面创建用户：</p><ol><li><p>右击你要创建用户的OU；或者选中OU，在右边空白的地方右击，选择“新建”—“用户”；<br><img src="https://i.loli.net/2019/09/09/v71qjrZ5bpgLeiV.png" alt="1.png"></p><a id="more"></a></li><li><p>在空白框里填入用户基本信息，然后选择“下一步”；<br><img src="https://i.loli.net/2019/09/09/QTMCJiLDWxuV7Ij.png" alt="2.png"></p></li><li><p>输入用户密码，选择密码的属性（有4种）；选择“下一步”；<br><img src="https://i.loli.net/2019/09/09/cohqg7tIJexRjGs.png" alt="3.png"></p></li><li><p>这里可以可以看出前面的一些设置，选择“完成”；<br><img src="https://i.loli.net/2019/09/09/upCle21oIyfVQtq.png" alt="4.png"></p><p>二 使用命令（cmd或powershell）创建用户：</p></li><li><p>在cmd中输入</p></li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dsadd user cn&#x3D;test1,ou&#x3D;test,dc&#x3D;weisunit,dc&#x3D;com -pwd Qwe123456</span><br></pre></td></tr></table></figure><p>其中“cn”是创建的用户，“ou”是组织单位,“-pwd”后面的参数是密码</p><ol start="2"><li>powershell中</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">New-ADUser -Name:&quot;test3&quot; -Path:&quot;ou&#x3D;test,dc&#x3D;weisunit,dc&#x3D;com&quot; -SamAccountName:&quot;test3&quot; -UserPrincipalName:&quot;test3@weisunit.com&quot;</span><br></pre></td></tr></table></figure><p>New-ADUser新建用户，其中-Name后面的是显示名称，-Path后面的是账户的路径，-SamAccountName是Sam账户（就是域名\账户，是旧格式的登录方式，在这里直接输入用户名就可以了，不要用输入域名\用户名），-UserPrincipalName是UPN登录名（即用户名@域名）</p><p> 三 批量创建用户</p><ol><li><p>使用 Csvde 命令先导出 test组织单元下的域配置信息</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">csvde -d &quot;ou&#x3D;test,dc&#x3D;weisunit,dc&#x3D;com&quot; -f c:\outaduser.csv </span><br></pre></td></tr></table></figure></li><li><p>打开导出的文件，根据 AD 属性对照表添加相应信息,由于CSVDE不能设置密码，UserAccountControl因此建议使用514,之后手动启用<br><img src="https://i.loli.net/2019/09/09/sdxjZ16Kh5XacC4.png" alt="5.png"></p></li><li><p>保存修改的文件重命名为adduser.cdv,命令行导入</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">csvde -i -f  c:\adduser.csv </span><br></pre></td></tr></table></figure><p>四 UPN方式登陆<br>UPN（User Principal Name）方式登陆：</p><p>用户名@域名</p></li></ol><p>登陆名方式：</p><p>   域名\用户名</p><p>很多情况下，我们用的域名和我们邮箱的域名不是一样的，比如域名是abc.sh，那么他的UPN登录方式应该是<a href="mailto:&#x78;&#120;&#120;&#x40;&#x61;&#x62;&#x63;&#x2e;&#115;&#104;">&#x78;&#120;&#120;&#x40;&#x61;&#x62;&#x63;&#x2e;&#115;&#104;</a>，邮箱域名是test.com，邮箱是<a href="mailto:&#x78;&#x78;&#x78;&#64;&#116;&#101;&#x73;&#x74;&#46;&#99;&#x6f;&#109;">&#x78;&#x78;&#x78;&#64;&#116;&#101;&#x73;&#x74;&#46;&#99;&#x6f;&#109;</a>，那我们想用邮箱直接就可以登录到域：</p><ol><li><p>打开服务器管理器——工具——Actice Director域和信任关系<br><img src="https://i.loli.net/2019/09/09/UjM5E1ewBuRDt2N.png" alt="6.png"></p></li><li><p>右击“Active Directory域和信任关系”，选择“属性”<br><img src="https://i.loli.net/2019/09/09/G7ORkpNmhYPHoiL.png" alt="7.png"></p></li><li><p>在属性界面输入UPN后缀，选择“添加”<br><img src="https://i.loli.net/2019/09/09/I25Wy3jUmOz8PqR.png" alt="8.png"></p></li><li><p>添加完成后选择“确定“</p></li><li><p>打开“Active Directory用户和计算机”；右击用户，单击“属性”；单击“账户”选项卡；</p></li></ol><p>在用户登录名，选择UPN后缀，这样就可以用邮箱<a href="mailto:&#x78;&#120;&#120;&#x40;&#116;&#101;&#x73;&#x74;&#x2e;&#x63;&#111;&#109;">&#x78;&#120;&#120;&#x40;&#116;&#101;&#x73;&#x74;&#x2e;&#x63;&#111;&#109;</a>登录到域了<br><img src="https://i.loli.net/2019/09/09/lsq3WTHnJmDVI6r.png" alt="9.png"></p><p>  五 Active Directory 用户属性“账户”选项卡</p><ol><li><p>通过勾选“解锁账户”对已锁的账户进行解锁；在“账户选项”中，选择密码设置；在“账户过期”可以设置该账户超过一定的时间内会自动过期，无法使用；<br><img src="https://i.loli.net/2019/09/10/tIXcOhbepGNMrvV.png" alt="10.png"></p></li><li><p>在账户选项卡中显示着用户的登录名以及一些账户的其他设置；可以通“登录时间”设置用户登录到域的时间.选择好区域，然后选择允许登录还是拒绝登录，然后选择“确定”，回到用户属性窗口，在选择“确定”或“应用”。<br><img src="https://i.loli.net/2019/09/10/XmUBLp8e9udEqTM.png" alt="11.png"></p></li><li><p>可以选择“登录到”，选择“此用户只允许登录到—下列计算机”添加该用户只能登录的计算机名，然后选择“确定”，回到用户属性界面，然后选择“确定”或“应用”；<br><img src="https://i.loli.net/2019/09/10/wiM8k7FEuAcjIxX.png" alt="12.png"></p><p>六 重置用户密码与解锁用户<br>1、右击想要重置密码的账户，选择“重置密码”；<br><img src="https://i.loli.net/2019/09/10/ePJbozXfaBY7F9j.png" alt="13.png"><br>2、输入两遍新的密码，然后选择“确定”，重置密码就完成了；<br><img src="https://i.loli.net/2019/09/10/5ZDMPKy87apJHlG.png" alt="14.png"></p></li></ol><p>我们可以打开用户属性，通过勾选“解锁账户”来给账户解锁，详见五；<br>如果用户需忘记密码，可以通过重置密码，并勾选“解锁用户账户”来解锁；</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt; 一 使用Windows界面创建用户：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;右击你要创建用户的OU；或者选中OU，在右边空白的地方右击，选择“新建”—“用户”；&lt;br&gt;&lt;img src=&quot;https://i.loli.net/2019/09/09/v71qjrZ5bpgLeiV.png&quot; alt=&quot;1.png&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="windows server" scheme="http://weisunit.com/categories/windows-server/"/>
+    
+    
+    <category term="Active Directory" scheme="http://weisunit.com/tags/Active-Directory/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>用树莓派打造家庭影音中心</title>
+    <link href="http://weisunit.com/2019/08/29/%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E6%89%93%E9%80%A0%E5%AE%B6%E5%BA%AD%E5%BD%B1%E9%9F%B3%E4%B8%AD%E5%BF%83/"/>
+    <id>http://weisunit.com/2019/08/29/%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E6%89%93%E9%80%A0%E5%AE%B6%E5%BA%AD%E5%BD%B1%E9%9F%B3%E4%B8%AD%E5%BF%83/</id>
+    <published>2019-08-29T02:52:36.000Z</published>
+    <updated>2020-09-16T13:47:10.494Z</updated>
+    
+    <content type="html"><![CDATA[<p> 一 初始环境配置</p><ol><li>下载最新的<a href="https://www.raspberrypi.org/downloads/raspbian/">raspberrypi镜像</a></li><li>运行<a href="https://sourceforge.net/projects/win32diskimager/">win32diskimager写盘工具</a>写入镜像<br><img src="https://i.loli.net/2019/08/28/cH9URu3xp8M4iZJ.png" alt="3.png"><a id="more"></a></li><li>加电开机进行初始配置，一路next到主界面<br><img src="https://i.loli.net/2019/08/29/rP2W13hCExAfNSJ.png" alt="pi1.png"></li><li>打开 Rassberry Pi Configuration打开SSH，与VNC，方便我们进行管理配置<br><img src="https://i.loli.net/2019/08/29/OtA87urdUvWYoXk.png" alt="pi2.png"></li><li>更换国内源</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano &#x2F;etc&#x2F;apt&#x2F;sources.list</span><br></pre></td></tr></table></figure><pre><code>进入编辑界面，注释原有的内容，粘贴如下内容：</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;raspbian&#x2F;raspbian&#x2F; buster main non-free contrib</span><br><span class="line">deb-src http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;raspbian&#x2F;raspbian&#x2F; buster main non-free contrib</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano &#x2F;etc&#x2F;apt&#x2F;sources.list.d&#x2F;raspi.list</span><br></pre></td></tr></table></figure><pre><code>进入编辑界面，注释原有的内容，粘贴如下内容：</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;raspberrypi&#x2F; buster main ui</span><br></pre></td></tr></table></figure><p>保存退出</p><ol start="6"><li><p>更新系统</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade -y</span><br></pre></td></tr></table></figure><p>第一次更新比较费时，请耐心等待,更新完最好重启</p><p>二 安装plex媒体服务器</p></li><li><p>下载plex安装包，网址：<a href="https://www.plex.tv/zh/media-server-downloads/">https://www.plex.tv/zh/media-server-downloads/</a>,选择ARMV7版本或命令行下载</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https:&#x2F;&#x2F;downloads.plex.tv&#x2F;plex-media-server-new&#x2F;1.16.5.1554-1e5ff713d&#x2F;debian&#x2F;plexmediaserver_1.16.5.1554-1e5ff713d_armhf.deb</span><br></pre></td></tr></table></figure><p><img src="https://i.loli.net/2019/08/29/T1pXmI7dz5MUAVn.png" alt="pi3.png"></p></li><li><p>安装plex</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i plexmediaserver_1.16.5.1554-1e5ff713d_armhf.deb</span><br></pre></td></tr></table></figure><p>检查运行状态</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status plexmediaserver</span><br></pre></td></tr></table></figure><p>如果出现running的提示 ，就说明服务运行正常</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">● plexmediaserver.service - Plex Media Server</span><br><span class="line">   Loaded: loaded (&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;plexmediaserver.service; enabled; vendor preset: enabled)</span><br><span class="line">   Active: &#96; active (running)&#96; since Thu 2019-08-29 14:48:58 CST; 5s ago</span><br><span class="line">  Process: 1038 ExecStartPre&#x3D;&#x2F;bin&#x2F;sh -c &#x2F;usr&#x2F;bin&#x2F;test -d &quot;$&#123;PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR&#125;&quot; || </span><br><span class="line"> Main PID: 1041 (sh)</span><br><span class="line">    Tasks: 13 (limit: 2200)</span><br><span class="line">   Memory: 26.0M</span><br><span class="line">   CGroup: &#x2F;system.slice&#x2F;plexmediaserver.service</span><br><span class="line">           ├─1041 &#x2F;bin&#x2F;sh -c  PLEX_MEDIA_SERVER_INFO_VENDOR&#x3D;&quot;$(grep ^NAME&#x3D; &#x2F;etc&#x2F;os-release | awk -F&#x3D; &quot;&#123;prin</span><br><span class="line">           ├─1051 &#x2F;usr&#x2F;lib&#x2F;plexmediaserver&#x2F;Plex Media Server</span><br><span class="line">           └─1075 Plex Plug-in [com.plexapp.system] &#x2F;usr&#x2F;lib&#x2F;plexmediaserver&#x2F;Resources&#x2F;Plug-ins-1e5ff713d&#x2F;F</span><br></pre></td></tr></table></figure></li></ol><p>此时可以在菜单里面启动，或者直接在浏览器中输入：<a href="http://localhost:32400/web/">http://localhost:32400/web/</a></p><ol start="3"><li><p>初次登录plex配置，需要登录注册plex账号，没有就注册一个<br><img src="https://i.loli.net/2019/08/29/ZR2bqzafHg8FQUe.png" alt="pi4.png"></p></li><li><p>登陆成功后一路下一步进入主界面<br><img src="https://i.loli.net/2019/08/29/kQiGEe6cKBIStF7.png" alt="pi5-min.png"><br><img src="https://i.loli.net/2019/08/29/D91JWiFKkjvh3n4.png" alt="pi6-min.png"></p><p>三 自动挂载U盘或移动硬盘</p></li><li><p>ntfs，exfat文件格式添加支持</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ntfs-3g</span><br><span class="line">sudo apt-get install exfat-fuse</span><br></pre></td></tr></table></figure></li><li><p>创建挂载点</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir &#x2F;media&#x2F;usb&#x2F;</span><br></pre></td></tr></table></figure></li><li><p>挂载ntfs，exfat，fat32等格式硬盘,根据情况自己选择</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano &#x2F;etc&#x2F;fstab</span><br></pre></td></tr></table></figure><p> a. ntfs</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在最后一行添加如下内容</span><br><span class="line">&#x2F;dev&#x2F;sda1 &#x2F;media&#x2F;usb&#x2F; ntfs-3g defaults,noexec,umask&#x3D;0000 0 0</span><br></pre></td></tr></table></figure><p> b. exfat</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;dev&#x2F;sda1 &#x2F;media&#x2F;usb&#x2F; vfat rw,defaults 0 0</span><br></pre></td></tr></table></figure><p> c. fat32</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;dev&#x2F;sda1 &#x2F;media&#x2F;usb&#x2F; auto defaults,noexec,umask&#x3D;0000 0 0</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo reboot</span><br></pre></td></tr></table></figure><p>说明：<br>sda1是取决于你的实际情况，a表示第一个硬盘，1表示第一个分区。<br>或是用UUID表示 查看UUID <code>ls -l /dev/disk/by-uuid</code><br><code>umask=0000 0 0</code><br>前面四个0就是对所有人,可读可写可执行,<br>后面两个0,第一个代表dump,0是不备份<br>第二个代表fsck检查的顺序,0表示不检查<br>卸载：<code>sudo umount /mnt/usb</code></p><p>四 plex添加库<br>重启后，打开Plex网页面板，在左侧点击”添加库”，就可以选择挂载硬盘usb里的内容了。<br>添加后，Plex会自动解码并检索影片的相关信息，比如影片封面/资料等。</p></li></ol>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt; 一 初始环境配置&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;下载最新的&lt;a href=&quot;https://www.raspberrypi.org/downloads/raspbian/&quot;&gt;raspberrypi镜像&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;运行&lt;a href=&quot;https://sourceforge.net/projects/win32diskimager/&quot;&gt;win32diskimager写盘工具&lt;/a&gt;写入镜像&lt;br&gt;&lt;img src=&quot;https://i.loli.net/2019/08/28/cH9URu3xp8M4iZJ.png&quot; alt=&quot;3.png&quot;&gt;</summary>
+    
+    
+    
+    <category term="树莓派" scheme="http://weisunit.com/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+    
+    <category term="raspberrypi" scheme="http://weisunit.com/tags/raspberrypi/"/>
+    
+    <category term="plex" scheme="http://weisunit.com/tags/plex/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>记lede软路由x86-64安装</title>
+    <link href="http://weisunit.com/2019/08/28/%E8%AE%B0lede%E8%BD%AF%E8%B7%AF%E7%94%B1x86-64%E5%AE%89%E8%A3%85/"/>
+    <id>http://weisunit.com/2019/08/28/%E8%AE%B0lede%E8%BD%AF%E8%B7%AF%E7%94%B1x86-64%E5%AE%89%E8%A3%85/</id>
+    <published>2019-08-28T07:20:55.000Z</published>
+    <updated>2020-05-30T01:30:25.908Z</updated>
+    
+    <content type="html"><![CDATA[<p> 需要用到的工具</p><ol><li><p>lede镜像：<br>论坛下载地址: <a href="http://firmware.koolshare.cn/LEDE_X64_fw867/">http://firmware.koolshare.cn/LEDE_X64_fw867/</a></p></li><li><p>win32diskimager写盘工具：<br>官方下载地址: <a href="https://sourceforge.net/projects/win32diskimager/">https://sourceforge.net/projects/win32diskimager/</a></p></li><li><p>physdiskwrite写盘工具:<br>官方下载地址:<a href="https://m0n0.ch/wall/physdiskwrite.php">https://m0n0.ch/wall/physdiskwrite.php</a></p></li><li><p>优启通（EasyU）PE<br>下载地址:<a href="http://download.itiankong.net/data/3/easyu/EasyU_3.3.2019.0605.7z">http://download.itiankong.net/data/3/easyu/EasyU_3.3.2019.0605.7z</a></p><!-- winimage写盘工具(可选)官方下载地址:[http://www.winimage.com/download.htm](http://www.winimage.com/download.htm) --><a id="more"></a><p>U盘安装</p></li><li><p>打开安装好的win32diskimager，点击文件夹图标<br><img src="https://i.loli.net/2019/08/28/4DH2YC7ZhvoKQ8N.png" alt="1.png"></p></li><li><p>选择下载好的lede镜像<br><img src="https://i.loli.net/2019/08/28/hvrlXcxPEVS4t2W.png" alt="2.png"></p></li><li><p>点击write等待写盘完成<br><img src="https://i.loli.net/2019/08/28/cH9URu3xp8M4iZJ.png" alt="3.png"></p></li><li><p>开机重启进入BIOS，选择U盘为第一启动项，看到加载页面写入成功<br><img src="https://i.loli.net/2019/08/28/ShGoJLOVlcW7MYs.png" alt="4.png"></p></li></ol><p>这种系统是安装在u盘内的，不影响本机原系统</p><p> 安装到硬盘</p><ol><li><p>优启通制作pe启动盘，打开选择u盘，点击全新制作即可<br><img src="https://i.loli.net/2019/08/28/R7HABcWtXuDPOgk.png" alt="5.png"></p></li><li><p>复制下载好的physdiskwrite写盘工具和lede镜像到优盘<br><img src="https://i.loli.net/2019/08/28/SLJitfZcTUb6axe.png" alt="6.png"></p></li><li><p>重启开机狂按<a href="https://weisunit.com/2019/08/14/%E5%90%84%E5%93%81%E7%89%8C%E8%BF%9B%E5%85%A5%E5%90%AF%E5%8A%A8%E8%8F%9C%E5%8D%95%E9%80%89%E6%8B%A9%E9%A1%B9%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE/">快捷启动键</a>选择U盘启动，进入pe</p></li><li><p>安装前用pe自带的diskgenius删除硬盘上所有分区</p></li><li><p>在pe环境中运行CMD命令行，进入你的u盘，输入你的U盘盘符在加一个冒号，输入physdiskwrite -u ***.img<br><img src="https://i.loli.net/2019/08/28/5bsTPltCVrzIEvA.png" alt="7.png"><br><img src="https://i.loli.net/2019/08/28/lyx5Lz2rqV7dfpa.png" alt="8.png"><br><img src="https://i.loli.net/2019/08/28/BOylDo1u4RLU5qn.png" alt="9.png"></p><p>系统初始配置</p></li><li><p>修改默认网段</p></li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;config&#x2F;network</span><br></pre></td></tr></table></figure><p>默认网段192.168.1.1，一般是光猫，为避免冲突最好修改一下</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">config interface &#39;lan&#39;</span><br><span class="line">        option type &#39;bridge&#39;</span><br><span class="line">        option ifname &#39;eth0&#39;</span><br><span class="line">        option proto &#39;static&#39;</span><br><span class="line">        option ipaddr &#39;192.168.100.1&#39;  </span><br><span class="line">        option netmask &#39;255.255.255.0&#39;</span><br><span class="line">        option ip6assign &#39;60&#39;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>wq保存</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;etc&#x2F;init.d&#x2F;network restart</span><br></pre></td></tr></table></figure><p>重启网络</p><ol start="2"><li><p>默认用户：root  密码：koolshare 进入后台<br><img src="https://i.loli.net/2019/08/28/kwZJNBg4l1my8LV.png" alt="10.png"></p><p>安装koolss</p></li><li><p>安装lede系统一般都是为了翻墙，网上有很多opkg安装ipk包的教程，还是挺复杂的，这里提供库软的离线安装包koolss<br>一键安装<br>koolss:<a href="https://github.com/hq450/fancyss_history_package/blob/master/fancyss_X64/koolss_2.2.2.tar.gz">https://github.com/hq450/fancyss_history_package/blob/master/fancyss_X64/koolss_2.2.2.tar.gz</a><br><img src="https://i.loli.net/2019/08/28/wNcRPrTWAe12MKx.png" alt="11.png"></p></li></ol>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt; 需要用到的工具&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;lede镜像：&lt;br&gt;论坛下载地址: &lt;a href=&quot;http://firmware.koolshare.cn/LEDE_X64_fw867/&quot;&gt;http://firmware.koolshare.cn/LEDE_X64_fw867/&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;win32diskimager写盘工具：&lt;br&gt;官方下载地址: &lt;a href=&quot;https://sourceforge.net/projects/win32diskimager/&quot;&gt;https://sourceforge.net/projects/win32diskimager/&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;physdiskwrite写盘工具:&lt;br&gt;官方下载地址:&lt;a href=&quot;https://m0n0.ch/wall/physdiskwrite.php&quot;&gt;https://m0n0.ch/wall/physdiskwrite.php&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;优启通（EasyU）PE&lt;br&gt;下载地址:&lt;a href=&quot;http://download.itiankong.net/data/3/easyu/EasyU_3.3.2019.0605.7z&quot;&gt;http://download.itiankong.net/data/3/easyu/EasyU_3.3.2019.0605.7z&lt;/a&gt;&lt;/p&gt;
+&lt;!-- winimage写盘工具(可选)
+官方下载地址:[http://www.winimage.com/download.htm](http://www.winimage.com/download.htm) --&gt;</summary>
+    
+    
+    
+    <category term="网络" scheme="http://weisunit.com/categories/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+    <category term="lede" scheme="http://weisunit.com/tags/lede/"/>
+    
+    <category term="openwrt" scheme="http://weisunit.com/tags/openwrt/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>新款树莓派4B开箱</title>
+    <link href="http://weisunit.com/2019/08/26/%E6%96%B0%E6%AC%BE%E6%A0%91%E8%8E%93%E6%B4%BE4B%E5%BC%80%E7%AE%B1/"/>
+    <id>http://weisunit.com/2019/08/26/%E6%96%B0%E6%AC%BE%E6%A0%91%E8%8E%93%E6%B4%BE4B%E5%BC%80%E7%AE%B1/</id>
+    <published>2019-08-26T08:09:58.000Z</published>
+    <updated>2020-05-30T01:30:14.641Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://i.loli.net/2019/08/26/bU1mcwHuAN7KBOL.png" alt="17640215326961.png"><br>6 月 24 日，位于英国的教育慈善组织「Raspberry Pi 基金会」推出了它们的新一代产品：树莓派 4（Raspberry Pi 4）<br>得益于制程和架构的提升，4 代性能预计可比上代树莓派 3B+提升 2-4 倍。经过两个多月，终于拿到了现货，第一时间与大家分享。</p><a id="more"></a><p> 开箱图<br><img src="https://i.loli.net/2019/08/27/FfAQpd5j3YoyW6G.jpg" alt="IMG_20190825_170833-min.jpg"><br><img src="https://i.loli.net/2019/08/27/Xo6k2bI8OfvegHJ.jpg" alt="IMG_20190825_170842-min.jpg"><br>包装还是老样子，骚红。</p><hr><p><img src="https://i.loli.net/2019/08/26/gyL9FJOBr7Zan51.jpg" alt="IMG_20190825_170944.jpg"><br>采用了 A72 架构的博通 BCM2711 四核芯片，主频为 1.5GHz</p><hr><p><img src="https://i.loli.net/2019/08/27/TcnZVJz1yCsfiqx.jpg" alt="IMG_20190825_171002-min.jpg"><br>背面</p><hr><p><img src="https://i.loli.net/2019/08/27/zDroUVqPIeW5j7G.jpg" alt="IMG_20190825_171012-min.jpg"><br>一个type-c借口，可以用 5V/3A 的 USB-C 充电器直接供电；两个mini HDMI接口，支持双4K显示器，3.5mm 的耳机</p><hr><p><img src="https://i.loli.net/2019/08/27/PX3RmM1CzbiAFpD.jpg" alt="IMG_20190825_170953-min.jpg"><br>两个USB 2.0 和 USB3.0 接口，802.11ac 双频 Wi-Fi 网络、千兆以太网以及蓝牙 5.0 技术</p><p> 树莓派4b与树莓派3b+对比<br><img src="https://i.loli.net/2019/08/26/idxgSXOalhqNjPV.png" alt="17860601586857.png"></p><p>  小结<br>树莓派 4 的硬件获得了不小的升级，起步价还是和 3 代一致，同时也首次推出了售价更高的大内存版本。</p><p>其中 1GB 内存版价格为 35 美元；至于 2GB 内存板则为 45 美元，最高 4GB 内存版为 55 美元。此外官方还推出了一个配备了键鼠套装、SD 存储卡和保护外壳的套装版，定价 120 美元。</p><p>最近媒体曝树莓派4不兼容某些USB-C线缆的问题，据悉，兼容性与用户使用的线缆类型有关。尽管大部分线材可以正常工作，但若线缆自带了电子标记（e-mark / 通常用于笔记本充电），就可能无法搭配树莓派 4 使用。</p><p>紧随性能的大幅提升，博通电磁炉也真不是盖的，建议加装散热贴片和主动风扇，秀一波我树莓派的完全体。<br><img src="https://i.loli.net/2019/08/27/QGw2hSelifsNEu4.jpg" alt="IMG_20190826_165709-min.jpg"><br><img src="https://i.loli.net/2019/08/27/f47WbEnsAxcKoaF.jpg" alt="IMG_20190826_165715-min.jpg"></p><p>参考资料:</p><p><a href="https://www.raspberrypi.org/products/raspberry-pi-4-model-b/">https://www.raspberrypi.org/products/raspberry-pi-4-model-b/</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://i.loli.net/2019/08/26/bU1mcwHuAN7KBOL.png&quot; alt=&quot;17640215326961.png&quot;&gt;&lt;br&gt;6 月 24 日，位于英国的教育慈善组织「Raspberry Pi 基金会」推出了它们的新一代产品：树莓派 4（Raspberry Pi 4）&lt;br&gt;得益于制程和架构的提升，4 代性能预计可比上代树莓派 3B+提升 2-4 倍。经过两个多月，终于拿到了现货，第一时间与大家分享。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="树莓派" scheme="http://weisunit.com/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+    
+    <category term="树莓派" scheme="http://weisunit.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+    <category term="raspberrypi" scheme="http://weisunit.com/tags/raspberrypi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>记华硕Ac-68u刷merlin改版固件</title>
+    <link href="http://weisunit.com/2019/08/20/%E8%AE%B0%E5%8D%8E%E7%A1%95Ac-68u%E5%88%B7merlin%E6%94%B9%E7%89%88%E5%9B%BA%E4%BB%B6/"/>
+    <id>http://weisunit.com/2019/08/20/%E8%AE%B0%E5%8D%8E%E7%A1%95Ac-68u%E5%88%B7merlin%E6%94%B9%E7%89%88%E5%9B%BA%E4%BB%B6/</id>
+    <published>2019-08-20T07:10:32.000Z</published>
+    <updated>2020-05-30T01:26:31.018Z</updated>
+    
+    <content type="html"><![CDATA[<p> step 1 刷入 Merlin 固件</p><ol><li><p><a href="http://firmware.koolshare.cn/Koolshare_Merlin_Legacy_380/ASUS/RT-AC68U/">merlin改版固件</a>下载到桌面</p></li><li><p>进入路由后台192.168.50.1，/系统管理/固件升级/选择文件/上传 刷机即可<br><img src="https://i.loli.net/2019/08/20/Nn5pjaresu3i2Yt.png" alt="lu1.png"></p><a id="more"></a></li><li><p>重启进入后台能看到 软件中心 刷机成功<br><img src="https://i.loli.net/2019/08/20/9XoWjfmUbIxyAth.png" alt="lu0.png"></p><p>step 2 打开JFFS LAN口ssh</p></li><li><p>/系统管理/系统设置/下Persistent JFFS2 partition选项 Format JFFS partition at next boot（下次重启格式化 jffs 分区） 和 Enable JFFS custom scripts and configs（开启 jffs 自定义脚本）这两个选项并重启<br><img src="https://i.loli.net/2019/08/20/xn1aPZuTRfjLzOc.png" alt="lu2.png"></p></li><li><p>/系统管理/系统设置/下 SSH Daemon 打开LAN口ssh<br><img src="https://i.loli.net/2019/08/20/l8pN4iFqdZuALrY.png" alt="lu3.png"></p><p>step 3 安装shadowsocks</p></li></ol><p>官方软件中心已经没有了我们需要的东西，所以需要自己动手将 shadowsocks 上传到路由器。</p><ol><li><p>下载shadowsocks离线包，有两种方法<br> a. ssh 连接到路由命令行下载到 /tmp 文件夹</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -N -O shadowsocks.tar.gz  https:&#x2F;&#x2F;github.com&#x2F;hq450&#x2F;fancyss_history_package&#x2F;blob&#x2F;master&#x2F;fancyss_arm&#x2F;shadowsocks_4.2.0.tar.gz</span><br></pre></td></tr></table></figure><p> b. 下载到本地<a href="https://github.com/hq450/fancyss_history_package/blob/master/fancyss_arm/shadowsocks_4.2.0.tar.gz">shadowsocks离线包</a>用winscp上传到 /tmp 文件夹</p></li><li><p>执行安装</p></li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;tmp</span><br><span class="line"></span><br><span class="line">tar -zxvf &#x2F;tmp&#x2F;shadowsocks.tar.gz</span><br><span class="line"></span><br><span class="line">chmod +x &#x2F;tmp&#x2F;shadowsocks&#x2F;install.sh</span><br><span class="line"></span><br><span class="line">sh &#x2F;tmp&#x2F;shadowsocks&#x2F;install.sh</span><br><span class="line"></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure><p><img src="https://i.loli.net/2019/08/20/cWjI4oDzMEPS5Lk.png" alt="lu4.png"></p><p>配合我之前的文章 <a href="https://weisunit.com/2019/08/07/%E6%88%91%E6%90%AD%E5%BB%BA%E6%9C%BA%E5%9C%BA%E7%9A%84%E5%BF%83%E5%BE%97/more">我搭建机场的心得</a>享受无缝翻墙的快感吧！</p><p><img src="https://i.loli.net/2019/08/20/aovPAj1ec4TsNSd.png" alt="lu5.png"></p><p>固件很强大，更多功能等待你去自己挖掘！</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt; step 1 刷入 Merlin 固件&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://firmware.koolshare.cn/Koolshare_Merlin_Legacy_380/ASUS/RT-AC68U/&quot;&gt;merlin改版固件&lt;/a&gt;下载到桌面&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;进入路由后台192.168.50.1，/系统管理/固件升级/选择文件/上传 刷机即可&lt;br&gt;&lt;img src=&quot;https://i.loli.net/2019/08/20/Nn5pjaresu3i2Yt.png&quot; alt=&quot;lu1.png&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="网络" scheme="http://weisunit.com/categories/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+    <category term="路由器" scheme="http://weisunit.com/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/"/>
+    
+  </entry>
+  
+</feed>

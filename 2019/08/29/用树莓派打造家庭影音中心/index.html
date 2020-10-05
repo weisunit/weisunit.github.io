@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>用树莓派打造家庭影音中心 | Hexo</title>
+  <meta name="description" content="一 初始环境配置  下载最新的raspberrypi镜像 运行win32diskimager写盘工具写入镜像">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用树莓派打造家庭影音中心">
+<meta property="og:url" content="http://weisunit.com/2019/08/29/%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E6%89%93%E9%80%A0%E5%AE%B6%E5%BA%AD%E5%BD%B1%E9%9F%B3%E4%B8%AD%E5%BF%83/index.html">
+<meta property="og:site_name" content="无聊的博客">
+<meta property="og:description" content="一 初始环境配置  下载最新的raspberrypi镜像 运行win32diskimager写盘工具写入镜像">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2019/08/28/cH9URu3xp8M4iZJ.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/29/rP2W13hCExAfNSJ.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/29/OtA87urdUvWYoXk.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/29/T1pXmI7dz5MUAVn.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/29/ZR2bqzafHg8FQUe.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/29/kQiGEe6cKBIStF7.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/29/D91JWiFKkjvh3n4.png">
+<meta property="article:published_time" content="2019-08-29T02:52:36.000Z">
+<meta property="article:modified_time" content="2020-09-16T13:47:10.494Z">
+<meta property="article:author" content="Sun Wei">
+<meta property="article:tag" content="raspberrypi">
+<meta property="article:tag" content="plex">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/08/28/cH9URu3xp8M4iZJ.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://weisunit.com/2019/08/29/%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E6%89%93%E9%80%A0%E5%AE%B6%E5%BA%AD%E5%BD%B1%E9%9F%B3%E4%B8%AD%E5%BF%83/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="无聊的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/weisunit" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">无聊的博客</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">技术在于折腾，价值出于稳定</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/weisunit" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Liunx/">Liunx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/windows/">windows</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/windows-server/">windows server</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">科学上网</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Active-Directory/" rel="tag">Active Directory</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BBR/" rel="tag">BBR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BBR-Plus/" rel="tag">BBR Plus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch/" rel="tag">Elasticsearch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LotServer/" rel="tag">LotServer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Trojan/" rel="tag">Trojan</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VPN/" rel="tag">VPN</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cacti/" rel="tag">cacti</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos7/" rel="tag">centos7</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/" rel="tag">elasticsearch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iso/" rel="tag">iso</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lede/" rel="tag">lede</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openwrt/" rel="tag">openwrt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/plex/" rel="tag">plex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberrypi/" rel="tag">raspberrypi</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberrypi%EF%BC%8CSamba/" rel="tag">raspberrypi，Samba</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks/" rel="tag">shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/v2ray/" rel="tag">v2ray</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows10/" rel="tag">windows10</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zabbix/" rel="tag">zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E6%9D%BF/" rel="tag">主板</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BF%AB%E6%8D%B7%E9%94%AE/" rel="tag">快捷键</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%89%93%E5%8D%B0%E6%9C%BA/" rel="tag">打印机</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AB%AF%E5%8F%A3/" rel="tag">端口</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BA%BF/" rel="tag">网线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" rel="tag">路由器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%95%9C%E5%83%8F/" rel="tag">镜像</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AD%94%E6%94%B9BBR/" rel="tag">魔改BBR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/" rel="tag">黑苹果</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Active-Directory/" style="font-size: 13.33px;">Active Directory</a> <a href="/tags/BBR/" style="font-size: 13px;">BBR</a> <a href="/tags/BBR-Plus/" style="font-size: 13px;">BBR Plus</a> <a href="/tags/Elasticsearch/" style="font-size: 13px;">Elasticsearch</a> <a href="/tags/LotServer/" style="font-size: 13px;">LotServer</a> <a href="/tags/Trojan/" style="font-size: 13.33px;">Trojan</a> <a href="/tags/VPN/" style="font-size: 13.33px;">VPN</a> <a href="/tags/cacti/" style="font-size: 13px;">cacti</a> <a href="/tags/centos7/" style="font-size: 13.33px;">centos7</a> <a href="/tags/elasticsearch/" style="font-size: 13px;">elasticsearch</a> <a href="/tags/iso/" style="font-size: 13.33px;">iso</a> <a href="/tags/lede/" style="font-size: 13px;">lede</a> <a href="/tags/linux/" style="font-size: 13.67px;">linux</a> <a href="/tags/openwrt/" style="font-size: 13px;">openwrt</a> <a href="/tags/plex/" style="font-size: 13px;">plex</a> <a href="/tags/raspberrypi/" style="font-size: 14px;">raspberrypi</a> <a href="/tags/raspberrypi%EF%BC%8CSamba/" style="font-size: 13px;">raspberrypi，Samba</a> <a href="/tags/shadowsocks/" style="font-size: 13px;">shadowsocks</a> <a href="/tags/v2ray/" style="font-size: 13px;">v2ray</a> <a href="/tags/windows10/" style="font-size: 13.33px;">windows10</a> <a href="/tags/zabbix/" style="font-size: 13px;">zabbix</a> <a href="/tags/%E4%B8%BB%E6%9D%BF/" style="font-size: 13px;">主板</a> <a href="/tags/%E5%BF%AB%E6%8D%B7%E9%94%AE/" style="font-size: 13px;">快捷键</a> <a href="/tags/%E6%89%93%E5%8D%B0%E6%9C%BA/" style="font-size: 13px;">打印机</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13.67px;">树莓派</a> <a href="/tags/%E7%AB%AF%E5%8F%A3/" style="font-size: 13px;">端口</a> <a href="/tags/%E7%BD%91%E7%BA%BF/" style="font-size: 13px;">网线</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 13px;">路由器</a> <a href="/tags/%E9%95%9C%E5%83%8F/" style="font-size: 13.33px;">镜像</a> <a href="/tags/%E9%AD%94%E6%94%B9BBR/" style="font-size: 13px;">魔改BBR</a> <a href="/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/" style="font-size: 13px;">黑苹果</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">5</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/16/%E6%A0%91%E8%8E%93%E6%B4%BESamba%E5%B1%80%E5%9F%9F%E7%BD%91%E5%85%B1%E4%BA%AB/" class="title">树莓派Samba局域网共享</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-16T14:45:55.000Z" itemprop="datePublished">2020-09-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/16/%E6%A0%91%E8%8E%93%E6%B4%BE4%E9%83%A8%E7%BD%B2Aria2%E5%81%9A%E4%B8%8B%E8%BD%BD%E6%9C%BA/" class="title">树莓派4部署Aria2做下载机</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-16T13:43:27.000Z" itemprop="datePublished">2020-09-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">科学上网</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/07/10/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6Trojan-Go/" class="title">上网科学Trojan-Go</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-07-10T03:31:52.000Z" itemprop="datePublished">2020-07-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">科学上网</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/05/31/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6TCP%E5%8A%A0%E9%80%9F/" class="title">上网科学TCP加速</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-05-31T10:58:08.000Z" itemprop="datePublished">2020-05-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">科学上网</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/05/31/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6Trojan/" class="title">上网科学Trojan</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-05-31T09:37:53.000Z" itemprop="datePublished">2020-05-31</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-用树莓派打造家庭影音中心" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      用树莓派打造家庭影音中心
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/08/29/%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E6%89%93%E9%80%A0%E5%AE%B6%E5%BA%AD%E5%BD%B1%E9%9F%B3%E4%B8%AD%E5%BF%83/" class="article-date">
+	  <time datetime="2019-08-29T02:52:36.000Z" itemprop="datePublished">2019-08-29</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/plex/" rel="tag">plex</a>, <a class="article-tag-link-link" href="/tags/raspberrypi/" rel="tag">raspberrypi</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/08/29/%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E6%89%93%E9%80%A0%E5%AE%B6%E5%BA%AD%E5%BD%B1%E9%9F%B3%E4%B8%AD%E5%BF%83/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p> 一 初始环境配置</p>
+<ol>
+<li>下载最新的<a target="_blank" rel="noopener" href="https://www.raspberrypi.org/downloads/raspbian/">raspberrypi镜像</a></li>
+<li>运行<a target="_blank" rel="noopener" href="https://sourceforge.net/projects/win32diskimager/">win32diskimager写盘工具</a>写入镜像<br><img src="https://i.loli.net/2019/08/28/cH9URu3xp8M4iZJ.png" alt="3.png"><a id="more"></a></li>
+<li>加电开机进行初始配置，一路next到主界面<br><img src="https://i.loli.net/2019/08/29/rP2W13hCExAfNSJ.png" alt="pi1.png"></li>
+<li>打开 Rassberry Pi Configuration打开SSH，与VNC，方便我们进行管理配置<br><img src="https://i.loli.net/2019/08/29/OtA87urdUvWYoXk.png" alt="pi2.png"></li>
+<li>更换国内源</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano &#x2F;etc&#x2F;apt&#x2F;sources.list</span><br></pre></td></tr></table></figure>
+<pre><code>进入编辑界面，注释原有的内容，粘贴如下内容：</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;raspbian&#x2F;raspbian&#x2F; buster main non-free contrib</span><br><span class="line">deb-src http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;raspbian&#x2F;raspbian&#x2F; buster main non-free contrib</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano &#x2F;etc&#x2F;apt&#x2F;sources.list.d&#x2F;raspi.list</span><br></pre></td></tr></table></figure>
+<pre><code>进入编辑界面，注释原有的内容，粘贴如下内容：</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;raspberrypi&#x2F; buster main ui</span><br></pre></td></tr></table></figure>
+<p>保存退出</p>
+<ol start="6">
+<li><p>更新系统</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade -y</span><br></pre></td></tr></table></figure>
+<p>第一次更新比较费时，请耐心等待,更新完最好重启</p>
+<p>二 安装plex媒体服务器</p>
+</li>
+<li><p>下载plex安装包，网址：<a target="_blank" rel="noopener" href="https://www.plex.tv/zh/media-server-downloads/">https://www.plex.tv/zh/media-server-downloads/</a>,选择ARMV7版本或命令行下载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https:&#x2F;&#x2F;downloads.plex.tv&#x2F;plex-media-server-new&#x2F;1.16.5.1554-1e5ff713d&#x2F;debian&#x2F;plexmediaserver_1.16.5.1554-1e5ff713d_armhf.deb</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2019/08/29/T1pXmI7dz5MUAVn.png" alt="pi3.png"></p>
+</li>
+<li><p>安装plex</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i plexmediaserver_1.16.5.1554-1e5ff713d_armhf.deb</span><br></pre></td></tr></table></figure>
+<p>检查运行状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status plexmediaserver</span><br></pre></td></tr></table></figure>
+<p>如果出现running的提示 ，就说明服务运行正常</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">● plexmediaserver.service - Plex Media Server</span><br><span class="line">   Loaded: loaded (&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;plexmediaserver.service; enabled; vendor preset: enabled)</span><br><span class="line">   Active: &#96; active (running)&#96; since Thu 2019-08-29 14:48:58 CST; 5s ago</span><br><span class="line">  Process: 1038 ExecStartPre&#x3D;&#x2F;bin&#x2F;sh -c &#x2F;usr&#x2F;bin&#x2F;test -d &quot;$&#123;PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR&#125;&quot; || </span><br><span class="line"> Main PID: 1041 (sh)</span><br><span class="line">    Tasks: 13 (limit: 2200)</span><br><span class="line">   Memory: 26.0M</span><br><span class="line">   CGroup: &#x2F;system.slice&#x2F;plexmediaserver.service</span><br><span class="line">           ├─1041 &#x2F;bin&#x2F;sh -c  PLEX_MEDIA_SERVER_INFO_VENDOR&#x3D;&quot;$(grep ^NAME&#x3D; &#x2F;etc&#x2F;os-release | awk -F&#x3D; &quot;&#123;prin</span><br><span class="line">           ├─1051 &#x2F;usr&#x2F;lib&#x2F;plexmediaserver&#x2F;Plex Media Server</span><br><span class="line">           └─1075 Plex Plug-in [com.plexapp.system] &#x2F;usr&#x2F;lib&#x2F;plexmediaserver&#x2F;Resources&#x2F;Plug-ins-1e5ff713d&#x2F;F</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>此时可以在菜单里面启动，或者直接在浏览器中输入：<a target="_blank" rel="noopener" href="http://localhost:32400/web/">http://localhost:32400/web/</a></p>
+<ol start="3">
+<li><p>初次登录plex配置，需要登录注册plex账号，没有就注册一个<br><img src="https://i.loli.net/2019/08/29/ZR2bqzafHg8FQUe.png" alt="pi4.png"></p>
+</li>
+<li><p>登陆成功后一路下一步进入主界面<br><img src="https://i.loli.net/2019/08/29/kQiGEe6cKBIStF7.png" alt="pi5-min.png"><br><img src="https://i.loli.net/2019/08/29/D91JWiFKkjvh3n4.png" alt="pi6-min.png"></p>
+<p>三 自动挂载U盘或移动硬盘</p>
+</li>
+<li><p>ntfs，exfat文件格式添加支持</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ntfs-3g</span><br><span class="line">sudo apt-get install exfat-fuse</span><br></pre></td></tr></table></figure></li>
+<li><p>创建挂载点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir &#x2F;media&#x2F;usb&#x2F;</span><br></pre></td></tr></table></figure></li>
+<li><p>挂载ntfs，exfat，fat32等格式硬盘,根据情况自己选择</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano &#x2F;etc&#x2F;fstab</span><br></pre></td></tr></table></figure>
+<p> a. ntfs</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在最后一行添加如下内容</span><br><span class="line">&#x2F;dev&#x2F;sda1 &#x2F;media&#x2F;usb&#x2F; ntfs-3g defaults,noexec,umask&#x3D;0000 0 0</span><br></pre></td></tr></table></figure>
+<p> b. exfat</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;dev&#x2F;sda1 &#x2F;media&#x2F;usb&#x2F; vfat rw,defaults 0 0</span><br></pre></td></tr></table></figure>
+
+<p> c. fat32</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;dev&#x2F;sda1 &#x2F;media&#x2F;usb&#x2F; auto defaults,noexec,umask&#x3D;0000 0 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo reboot</span><br></pre></td></tr></table></figure>
+<p>说明：<br>sda1是取决于你的实际情况，a表示第一个硬盘，1表示第一个分区。<br>或是用UUID表示 查看UUID <code>ls -l /dev/disk/by-uuid</code><br><code>umask=0000 0 0</code><br>前面四个0就是对所有人,可读可写可执行,<br>后面两个0,第一个代表dump,0是不备份<br>第二个代表fsck检查的顺序,0表示不检查<br>卸载：<code>sudo umount /mnt/usb</code></p>
+<p>四 plex添加库<br>重启后，打开Plex网页面板，在左侧点击”添加库”，就可以选择挂载硬盘usb里的内容了。<br>添加后，Plex会自动解码并检索影片的相关信息，比如影片封面/资料等。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://weisunit.com/2019/08/29/%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E6%89%93%E9%80%A0%E5%AE%B6%E5%BA%AD%E5%BD%B1%E9%9F%B3%E4%B8%AD%E5%BF%83/" title="用树莓派打造家庭影音中心" target="_blank" rel="external">http://weisunit.com/2019/08/29/%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E6%89%93%E9%80%A0%E5%AE%B6%E5%BA%AD%E5%BD%B1%E9%9F%B3%E4%B8%AD%E5%BF%83/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/weisunit" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/weisunit" target="_blank"><span class="text-dark">无聊的博客</span><small class="ml-1x">技术在于折腾，价值出于稳定</small></a></h3>
+        <div>IT Support。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/09/10/AD%E5%9F%9F%E6%9C%8D%E5%8A%A1%EF%BC%9A%E7%94%A8%E6%88%B7/" title="AD域服务：用户"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/08/28/%E8%AE%B0lede%E8%BD%AF%E8%B7%AF%E7%94%B1x86-64%E5%AE%89%E8%A3%85/" title="记lede软路由x86-64安装"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/weisunit" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '1b4a1f9df981db292852',
+    clientSecret: '563a1ae266e097853581131dac8b14759e1b32b1',
+    repo: 'blogtalk',
+    owner: 'weisunit',
+    admin: ['weisunit'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script>
+
+      
+
+
+
+
+
+
+
+</body>
+</html>
