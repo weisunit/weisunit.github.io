@@ -18,15 +18,15 @@
   
   
   <title>树莓派Samba局域网共享 | 无聊的博客</title>
-  <meta name="description" content="一. 安装Samba 12sudo apt-get install sambasudo apt-get install samba-common-bin  二. 修改配置文件 1sudo vim &#x2F;etc&#x2F;samba&#x2F;smb.conf 找到Global Settings节[global]部分：将# wins support &#x3D; no行改为 wins support &#x3D;">
+  <meta name="description" content="一. 安装Samba 12sudo apt-get install sambasudo apt-get install samba-common-bin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="树莓派Samba局域网共享">
 <meta property="og:url" content="http://weisunit.com/2020/09/16/%E6%A0%91%E8%8E%93%E6%B4%BESamba%E5%B1%80%E5%9F%9F%E7%BD%91%E5%85%B1%E4%BA%AB/index.html">
 <meta property="og:site_name" content="无聊的博客">
-<meta property="og:description" content="一. 安装Samba 12sudo apt-get install sambasudo apt-get install samba-common-bin  二. 修改配置文件 1sudo vim &#x2F;etc&#x2F;samba&#x2F;smb.conf 找到Global Settings节[global]部分：将# wins support &#x3D; no行改为 wins support &#x3D;">
+<meta property="og:description" content="一. 安装Samba 12sudo apt-get install sambasudo apt-get install samba-common-bin">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-09-16T14:45:55.000Z">
-<meta property="article:modified_time" content="2020-09-17T02:26:56.950Z">
+<meta property="article:modified_time" content="2020-10-05T12:16:36.520Z">
 <meta property="article:author" content="Sun Wei">
 <meta property="article:tag" content="raspberrypi，Samba">
 <meta name="twitter:card" content="summary">
@@ -366,7 +366,7 @@
       
         <p>一. 安装Samba</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install samba</span><br><span class="line">sudo apt-get install samba-common-bin</span><br></pre></td></tr></table></figure>
-
+<a id="more"></a>
 <p>二. 修改配置文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;samba&#x2F;smb.conf</span><br></pre></td></tr></table></figure>
 <p>找到<code>Global Settings节[global]</code>部分：<br>将# <code>wins support = no</code>行改为 <code>wins support = yes</code><br>找到<code>Share Definitions</code>节<code>[homes]</code>部分：<br>将<code>read only = yes</code>行改为<code>read only = no</code></p>
@@ -551,6 +551,17 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 
 
 
+
+    <script defer type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-179496259-1', 'auto');
+ga('send', 'pageview');
+
+</script>
 
 
 
