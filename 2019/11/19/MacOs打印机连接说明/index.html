@@ -1,556 +1,122 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-cmn-Hans">
 <head>
-  <meta charset="utf-8">
-  
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="renderer" content="webkit">
-  <meta http-equiv="Cache-Control" content="no-transform" />
-  <meta http-equiv="Cache-Control" content="no-siteapp" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="format-detection" content="telephone=no,email=no,adress=no">
-  <!-- Color theme for statusbar -->
-  <meta name="theme-color" content="#000000" />
-  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
-  <meta http-equiv="window-target" content="_top" />
-  
-  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>MacOs打印机连接说明 | 无聊的博客</title>
-  <meta name="description" content="一 打开系统偏好设置，点击打印机与扫描仪">
-<meta property="og:type" content="article">
-<meta property="og:title" content="MacOs打印机连接说明">
-<meta property="og:url" content="http://weisunit.com/2019/11/19/MacOs%E6%89%93%E5%8D%B0%E6%9C%BA%E8%BF%9E%E6%8E%A5%E8%AF%B4%E6%98%8E/index.html">
-<meta property="og:site_name" content="无聊的博客">
-<meta property="og:description" content="一 打开系统偏好设置，点击打印机与扫描仪">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.loli.net/2019/11/19/OGVXKieqZFcrzLE.png">
-<meta property="og:image" content="https://i.loli.net/2019/11/19/kpM1PzeWVA2oByK.png">
-<meta property="og:image" content="https://i.loli.net/2019/11/19/4AJ1ENb7RqOBgQU.png">
-<meta property="og:image" content="https://i.loli.net/2019/11/19/PZVdJ19eb2I4L3j.png">
-<meta property="og:image" content="https://i.loli.net/2019/11/19/KQnhkwEgaAOfC4M.png">
-<meta property="article:published_time" content="2019-11-19T02:36:26.000Z">
-<meta property="article:modified_time" content="2020-05-30T01:21:51.758Z">
-<meta property="article:author" content="Sun Wei">
-<meta property="article:tag" content="打印机">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2019/11/19/OGVXKieqZFcrzLE.png">
-  <!-- Canonical links -->
-  <link rel="canonical" href="http://weisunit.com/2019/11/19/MacOs%E6%89%93%E5%8D%B0%E6%9C%BA%E8%BF%9E%E6%8E%A5%E8%AF%B4%E6%98%8E/index.html">
   
-    <link rel="alternate" href="/atom.xml" title="无聊的博客" type="application/atom+xml">
+    <link rel="icon" href="avatar2.png">
   
   
-    <link rel="icon" href="/favicon.png" type="image/x-icon">
   
+  <!--link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css"-->
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css">
+
   
 <link rel="stylesheet" href="/css/style.css">
 
-  
-  
-  
-  
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
-  
-<meta name="generator" content="Hexo 5.2.0"></head>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="无聊的博客" type="application/atom+xml">
+</head>
 
-
-<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
-  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-  <div class="slimContent">
-    <div class="navbar-header">
-      
-      
-      <div class="profile-block text-center">
-        <a id="avatar" href="https://github.com/weisunit" target="_blank">
-          <img class="img-circle img-rotate" src="/images/avatar.png" width="200" height="200">
-        </a>
-        <h2 id="name" class="hidden-xs hidden-sm">无聊的博客</h2>
-        <h3 id="title" class="hidden-xs hidden-sm hidden-md">技术在于折腾，价值出于稳定</h3>
-        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
-      </div>
-      
-      <div class="search" id="search-form-wrap">
-
-    <form class="search-form sidebar-form">
-        <div class="input-group">
-            <input type="text" class="search-form-input form-control" placeholder="搜索" />
-            <span class="input-group-btn">
-                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
-            </span>
+<body>
+<div class="Shell">
+    <aside class='SideBar'>
+    <section class='avatar' style="background-image: url()">
+        <div class='av-pic' style="background-image: url()">
         </div>
-    </form>
-    <div class="ins-search">
-  <div class="ins-search-mask"></div>
-  <div class="ins-search-container">
-    <div class="ins-input-wrapper">
-      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
-      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-    </div>
-    <div class="ins-section-wrapper">
-      <div class="ins-section-container"></div>
-    </div>
-  </div>
-</div>
-
-
-</div>
-      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
-      <ul class="nav navbar-nav main-nav ">
+    </section>
+    <section class='menu'>
+        <div>无聊的博客</div>
         
+            <div>技术在于折腾，价值出于稳定</div>
         
-        <li class="menu-item menu-item-home">
-          <a href="/.">
-            
-            <i class="icon icon-home-fill"></i>
-            
-            <span class="menu-title">首页</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives">
-            
-            <i class="icon icon-archives-fill"></i>
-            
-            <span class="menu-title">归档</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories">
-            
-            <i class="icon icon-folder"></i>
-            
-            <span class="menu-title">分类</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags">
-            
-            <i class="icon icon-tags"></i>
-            
-            <span class="menu-title">标签</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-links">
-          <a href="/links">
-            
-            <i class="icon icon-friendship"></i>
-            
-            <span class="menu-title">友链</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about">
-            
-            <i class="icon icon-cup-fill"></i>
-            
-            <span class="menu-title">关于</span>
-          </a>
-        </li>
-        
-      </ul>
-      
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/weisunit" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
-        
-    </ul>
-
-    </nav>
-  </div>
-</header>
-
-  
-    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
-  <div class="slimContent">
-    
-      <div class="widget">
-    <h3 class="widget-title">公告</h3>
-    <div class="widget-body">
-        <div id="board">
-            <div class="content">
-                <p>欢迎交流与分享经验!</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">分类</h3>
-    <div class="widget-body">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Liunx/">Liunx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/windows/">windows</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/windows-server/">windows server</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">科学上网</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a><span class="category-list-count">4</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">标签</h3>
-    <div class="widget-body">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Active-Directory/" rel="tag">Active Directory</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BBR/" rel="tag">BBR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BBR-Plus/" rel="tag">BBR Plus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch/" rel="tag">Elasticsearch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LotServer/" rel="tag">LotServer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Trojan/" rel="tag">Trojan</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VPN/" rel="tag">VPN</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cacti/" rel="tag">cacti</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos7/" rel="tag">centos7</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/" rel="tag">elasticsearch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iso/" rel="tag">iso</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lede/" rel="tag">lede</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openwrt/" rel="tag">openwrt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/plex/" rel="tag">plex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberrypi/" rel="tag">raspberrypi</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberrypi%EF%BC%8CSamba/" rel="tag">raspberrypi，Samba</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shadowsocks/" rel="tag">shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/v2ray/" rel="tag">v2ray</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows10/" rel="tag">windows10</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zabbix/" rel="tag">zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E6%9D%BF/" rel="tag">主板</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BF%AB%E6%8D%B7%E9%94%AE/" rel="tag">快捷键</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%89%93%E5%8D%B0%E6%9C%BA/" rel="tag">打印机</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AB%AF%E5%8F%A3/" rel="tag">端口</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BA%BF/" rel="tag">网线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" rel="tag">路由器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%95%9C%E5%83%8F/" rel="tag">镜像</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%AD%94%E6%94%B9BBR/" rel="tag">魔改BBR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/" rel="tag">黑苹果</a><span class="tag-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">标签云</h3>
-    <div class="widget-body tagcloud">
-      <a href="/tags/Active-Directory/" style="font-size: 13.33px;">Active Directory</a> <a href="/tags/BBR/" style="font-size: 13px;">BBR</a> <a href="/tags/BBR-Plus/" style="font-size: 13px;">BBR Plus</a> <a href="/tags/Elasticsearch/" style="font-size: 13px;">Elasticsearch</a> <a href="/tags/LotServer/" style="font-size: 13px;">LotServer</a> <a href="/tags/Trojan/" style="font-size: 13.33px;">Trojan</a> <a href="/tags/VPN/" style="font-size: 13.33px;">VPN</a> <a href="/tags/cacti/" style="font-size: 13px;">cacti</a> <a href="/tags/centos7/" style="font-size: 13.33px;">centos7</a> <a href="/tags/elasticsearch/" style="font-size: 13px;">elasticsearch</a> <a href="/tags/iso/" style="font-size: 13.33px;">iso</a> <a href="/tags/lede/" style="font-size: 13px;">lede</a> <a href="/tags/linux/" style="font-size: 13.67px;">linux</a> <a href="/tags/openwrt/" style="font-size: 13px;">openwrt</a> <a href="/tags/plex/" style="font-size: 13px;">plex</a> <a href="/tags/raspberrypi/" style="font-size: 14px;">raspberrypi</a> <a href="/tags/raspberrypi%EF%BC%8CSamba/" style="font-size: 13px;">raspberrypi，Samba</a> <a href="/tags/shadowsocks/" style="font-size: 13px;">shadowsocks</a> <a href="/tags/v2ray/" style="font-size: 13px;">v2ray</a> <a href="/tags/windows10/" style="font-size: 13.33px;">windows10</a> <a href="/tags/zabbix/" style="font-size: 13px;">zabbix</a> <a href="/tags/%E4%B8%BB%E6%9D%BF/" style="font-size: 13px;">主板</a> <a href="/tags/%E5%BF%AB%E6%8D%B7%E9%94%AE/" style="font-size: 13px;">快捷键</a> <a href="/tags/%E6%89%93%E5%8D%B0%E6%9C%BA/" style="font-size: 13px;">打印机</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13.67px;">树莓派</a> <a href="/tags/%E7%AB%AF%E5%8F%A3/" style="font-size: 13px;">端口</a> <a href="/tags/%E7%BD%91%E7%BA%BF/" style="font-size: 13px;">网线</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 13px;">路由器</a> <a href="/tags/%E9%95%9C%E5%83%8F/" style="font-size: 13.33px;">镜像</a> <a href="/tags/%E9%AD%94%E6%94%B9BBR/" style="font-size: 13px;">魔改BBR</a> <a href="/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/" style="font-size: 13px;">黑苹果</a>
-    </div>
-  </div>
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">5</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget-body">
-      <ul class="recent-post-list list-unstyled no-thumbnail">
-        
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a>
-              </p>
-              <p class="item-title">
-                <a href="/2020/09/16/%E6%A0%91%E8%8E%93%E6%B4%BESamba%E5%B1%80%E5%9F%9F%E7%BD%91%E5%85%B1%E4%BA%AB/" class="title">树莓派Samba局域网共享</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2020-09-16T14:45:55.000Z" itemprop="datePublished">2020-09-16</time>
-              </p>
-            </div>
-          </li>
+        <ul>
           
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a>
-              </p>
-              <p class="item-title">
-                <a href="/2020/09/16/%E6%A0%91%E8%8E%93%E6%B4%BE4%E9%83%A8%E7%BD%B2Aria2%E5%81%9A%E4%B8%8B%E8%BD%BD%E6%9C%BA/" class="title">树莓派4部署Aria2做下载机</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2020-09-16T13:43:27.000Z" itemprop="datePublished">2020-09-16</time>
-              </p>
-            </div>
-          </li>
+            <a href="/" class="Btn">
+              <li>Home</li>
+            </a>  
           
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">科学上网</a>
-              </p>
-              <p class="item-title">
-                <a href="/2020/07/10/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6Trojan-Go/" class="title">上网科学Trojan-Go</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2020-07-10T03:31:52.000Z" itemprop="datePublished">2020-07-10</time>
-              </p>
-            </div>
-          </li>
+            <a href="/archives/" class="Btn">
+              <li>Archive</li>
+            </a>  
           
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">科学上网</a>
-              </p>
-              <p class="item-title">
-                <a href="/2020/05/31/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6TCP%E5%8A%A0%E9%80%9F/" class="title">上网科学TCP加速</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2020-05-31T10:58:08.000Z" itemprop="datePublished">2020-05-31</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">科学上网</a>
-              </p>
-              <p class="item-title">
-                <a href="/2020/05/31/%E4%B8%8A%E7%BD%91%E7%A7%91%E5%AD%A6Trojan/" class="title">上网科学Trojan</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2020-05-31T09:37:53.000Z" itemprop="datePublished">2020-05-31</time>
-              </p>
-            </div>
-          </li>
-          
-      </ul>
-    </div>
-  </div>
-  
-
-    
-  </div>
+        </ul>
+    </section>
+    <section class="media">
+        
+    </section>
 </aside>
 
-  
-  
-<main class="main" role="main">
-  <div class="content">
-  <article id="post-MacOs打印机连接说明" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-    
-    <div class="article-header">
-      
-        
-  
-    <h1 class="article-title" itemprop="name">
-      MacOs打印机连接说明
-    </h1>
-  
+    <div class="container">
+        <div data-pager-shell>
+            <div>
+  <article class='ContentView'>
+    <header class='PageTitle'>
+        <h1>MacOs打印机连接说明</h1>
+    </header>
 
-      
-      <div class="article-meta">
-        <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2019/11/19/MacOs%E6%89%93%E5%8D%B0%E6%9C%BA%E8%BF%9E%E6%8E%A5%E8%AF%B4%E6%98%8E/" class="article-date">
-	  <time datetime="2019-11-19T02:36:26.000Z" itemprop="datePublished">2019-11-19</time>
-	</a>
-</span>
-        
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/MacOS/">MacOS</a>
-  </span>
-
-        
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/%E6%89%93%E5%8D%B0%E6%9C%BA/" rel="tag">打印机</a>
-  </span>
-
-
-        
-
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/11/19/MacOs%E6%89%93%E5%8D%B0%E6%9C%BA%E8%BF%9E%E6%8E%A5%E8%AF%B4%E6%98%8E/#comments" class="article-comment-link">评论</a></span>
-        
-      </div>
-    </div>
-    <div class="article-entry marked-body" itemprop="articleBody">
-      
-        <p>一 打开系统偏好设置，点击打印机与扫描仪<br><img src="https://i.loli.net/2019/11/19/OGVXKieqZFcrzLE.png" alt="1.png"></p>
+    <section>
+      <p>一 打开系统偏好设置，点击打印机与扫描仪<br><img src="https://i.loli.net/2019/11/19/OGVXKieqZFcrzLE.png" alt="1.png"></p>
 <a id="more"></a>
 <p>二 点击加号添加，点击IP<br><img src="https://i.loli.net/2019/11/19/kpM1PzeWVA2oByK.png" alt="3.png"></p>
 <p>三 填写打印机内网IP（需在同一个局域网下），之后会自动寻找合适驱动<br><img src="https://i.loli.net/2019/11/19/4AJ1ENb7RqOBgQU.png" alt="4.png"></p>
 <p>四 点击添加，自动下载所需文件<br><img src="https://i.loli.net/2019/11/19/PZVdJ19eb2I4L3j.png" alt="5.png"></p>
 <p>五 完成<br><img src="https://i.loli.net/2019/11/19/KQnhkwEgaAOfC4M.png" alt="6.png"></p>
 
+
       
-    </div>
-    <div class="article-footer">
-      <blockquote class="mt-2x">
-  <ul class="post-copyright list-unstyled">
+
+    </section>
     
-    <li class="post-copyright-link hidden-xs">
-      <strong>本文链接：</strong>
-      <a href="http://weisunit.com/2019/11/19/MacOs%E6%89%93%E5%8D%B0%E6%9C%BA%E8%BF%9E%E6%8E%A5%E8%AF%B4%E6%98%8E/" title="MacOs打印机连接说明" target="_blank" rel="external">http://weisunit.com/2019/11/19/MacOs%E6%89%93%E5%8D%B0%E6%9C%BA%E8%BF%9E%E6%8E%A5%E8%AF%B4%E6%98%8E/</a>
-    </li>
+      <section class='ArticleMeta'>
+          <div>
+            发布于&nbsp;
+            <time datetime="2019-11-19T02:36:26.000Z" itemprop="datePublished">
+              2019-11-19
+            </time>
+          </div>
+          
+            <div>
+              tags: 
+  <li class="meta-text">
+  { <a href="/tags/%E6%89%93%E5%8D%B0%E6%9C%BA/">打印机</a> }
+  </li>
+
+
+            </div>
+          
+      </section>
     
-    <li class="post-copyright-license">
-      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
-    </li>
-  </ul>
-</blockquote>
-
-
-<div class="panel panel-default panel-badger">
-  <div class="panel-body">
-    <figure class="media">
-      <div class="media-left">
-        <a href="https://github.com/weisunit" target="_blank" class="img-burn thumb-sm visible-lg">
-          <img src="/images/avatar.png" class="img-rounded w-full" alt="">
-        </a>
-      </div>
-      <div class="media-body">
-        <h3 class="media-heading"><a href="https://github.com/weisunit" target="_blank"><span class="text-dark">无聊的博客</span><small class="ml-1x">技术在于折腾，价值出于稳定</small></a></h3>
-        <div>IT Support。</div>
-      </div>
-    </figure>
-  </div>
-</div>
-
-
-    </div>
-  </article>
-  
     
-  <section id="comments">
-  	
-           
-    
-  </section>
-
+</article>
 
   
 </div>
 
-  <nav class="bar bar-footer clearfix" data-stick-bottom>
-  <div class="bar-inner">
-  
-  <ul class="pager pull-left">
-    
-    <li class="prev">
-      <a href="/2019/11/20/%E5%90%84%E5%93%81%E7%89%8C%E8%BF%9B%E5%85%A5%E5%90%AF%E5%8A%A8%E8%8F%9C%E5%8D%95%E9%80%89%E6%8B%A9%E9%A1%B9%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE/" title="各品牌主板进入启动菜单选择项的快捷键"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
-    
-    <li class="next">
-      <a href="/2019/11/19/MacOs%E9%85%8D%E7%BD%AEVPN%E7%9A%84%E6%96%B9%E6%B3%95/" title="MacOs配置VPN的方法"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
-    </li>
-    
-    
-  </ul>
-  
-  
-  
-  <div class="bar-right">
-    
-    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
-    
-  </div>
-  </div>
-</nav>
-  
-
-
-</main>
-
-  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
-	
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/weisunit" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
-        
-    </ul>
-
-    <div class="copyright">
-    	
-        <div class="publishby">
-        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
-        </div>
+            <footer>
+    <div>© 2020 - Sun Wei </div>
+    <div>
+        <span>
+            Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+        </span>
+        ,
+        <span>
+            Theme - <a target="_blank" rel="noopener" href="https://github.com/nameoverflow/hexo-theme-icalm">Icalm</a>
+        </span>
     </div>
 </footer>
-  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+
+        </div>
+    </div>
+</div>
+
+<script src="/js/pager/dist/singlepager.js"></script>
+
 <script>
-window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
-</script>
-
-<script src="/js/plugin.min.js"></script>
-
-
-<script src="/js/application.js"></script>
-
-
-    <script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-
-<script src="/js/insight.js"></script>
-
-
-
-
-
-
-   
-
-
-
-
-   
-    
-  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
-  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
-  <script type="text/javascript">
-  var gitalk = new Gitalk({
-    clientID: '1b4a1f9df981db292852',
-    clientSecret: '563a1ae266e097853581131dac8b14759e1b32b1',
-    repo: 'blogtalk',
-    owner: 'weisunit',
-    admin: ['weisunit'],
-    id: md5(location.pathname),
-    distractionFreeMode: true
-  })
-  gitalk.render('comments')
-  </script>
-
-      
-
-
-
-
-
-    <script defer type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-179496259-1', 'auto');
-ga('send', 'pageview');
+var sp = new Pager('data-pager-shell')
 
 </script>
-
-
-
 </body>
 </html>
