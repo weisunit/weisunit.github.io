@@ -68,19 +68,19 @@
     <section>
       <p>一. 命令行激活系统<br>管理员权限打开CMD</p>
 <ol>
-<li>卸载已有激活key</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slmgr.vbs -upk </span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>安装新的GVLK<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slmgr.vbs -ipk W269N-WFGWX-YVC9B-4J6C9-T83GX</span><br></pre></td></tr></table></figure></li>
-<li>填写KMS服务器域名或者IP地址（会默认1688端口激活）<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slmgr.vbs -skms  192.168.20.254</span><br></pre></td></tr></table></figure></li>
-<li>尝试连接KMS服务器在线激活（attempt online）<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slmgr.vbs -ato </span><br></pre></td></tr></table></figure></li>
-<li>显示激活信息<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slmgr.vbs -dlv</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
+<li><p>卸载已有激活key</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slmgr.vbs -upk </span><br></pre></td></tr></table></figure></li>
+<li><p>安装新的GVLK</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slmgr.vbs -ipk W269N-WFGWX-YVC9B-4J6C9-T83GX</span><br></pre></td></tr></table></figure></li>
+<li><p>填写KMS服务器域名或者IP地址（会默认1688端口激活）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slmgr.vbs -skms  192.168.20.254</span><br></pre></td></tr></table></figure></li>
+<li><p>尝试连接KMS服务器在线激活（attempt online）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slmgr.vbs -ato </span><br></pre></td></tr></table></figure></li>
+<li><p>显示激活信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slmgr.vbs -dlv</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>二. 命令行激活office</p>
-<ol>
+</li>
 <li><p>根据版本不同，末尾的数字不同，而且要看你安装的位置在哪儿，一般是<br><code>C:\Program     Files\Microsoft Office\Office16</code></p>
 </li>
 <li><p>查看激活状态<br><code>cd C:\Program Files\Microsoft Office\Office16</code><br><code>cscript ospp.vbs /dstatus</code></p>
@@ -92,8 +92,8 @@
 <li><p>立刻尝试激活：<br><code>cscript ospp.vbs /act</code></p>
 </li>
 </ol>
-<h1 id="keys："><a href="#keys：" class="headerlink" title="keys："></a>keys：</h1><h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><hr>
-<h3 id="Windows-Server-2019"><a href="#Windows-Server-2019" class="headerlink" title="Windows Server 2019"></a>Windows Server 2019</h3><table width="100%" cellspacing="0" cellpadding="0">
+<h1 id="keys："><a href="#keys：" class="headerlink" title="keys："></a>keys：</h1><hr>
+<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><h3 id="Windows-Server-2019"><a href="#Windows-Server-2019" class="headerlink" title="Windows Server 2019"></a>Windows Server 2019</h3><table width="100%" cellspacing="0" cellpadding="0">
     <colgroup>
        <col span="1" width="50%">
        <col span="1" width="50%">
