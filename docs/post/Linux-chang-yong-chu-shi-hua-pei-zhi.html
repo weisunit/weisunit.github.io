@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# Linux常用初始化配置
+
+以下是您在新Linux系统上可能需要进行的一些初始化配置，涵盖了系统更新、用户管理、网络、安全和常用工具等方面。">
+<meta property="og:title" content="Linux常用初始化配置">
+<meta property="og:description" content="# Linux常用初始化配置
+
+以下是您在新Linux系统上可能需要进行的一些初始化配置，涵盖了系统更新、用户管理、网络、安全和常用工具等方面。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://weisunit.github.io/post/Linux-chang-yong-chu-shi-hua-pei-zhi.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>Linux常用初始化配置</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Linux常用初始化配置</h1>
+<div class="title-right">
+    <a href="https://weisunit.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/weisunit/weisunit.github.io/issues/5" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>Linux常用初始化配置</h1>
+<p>以下是您在新Linux系统上可能需要进行的一些初始化配置，涵盖了系统更新、用户管理、网络、安全和常用工具等方面。</p>
+<h4>1. 系统更新与升级</h4>
+<p>这是第一步，确保您的系统软件包都是最新的，以获取最新的功能、修复和安全补丁。</p>
+<ul>
+<li><strong>Debian/Ubuntu 系列 (apt)</strong>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt update          <span class="pl-c"><span class="pl-c">#</span> 更新软件包列表</span>
+sudo apt upgrade -y      <span class="pl-c"><span class="pl-c">#</span> 升级所有可升级的软件包</span>
+sudo apt autoremove -y   <span class="pl-c"><span class="pl-c">#</span> 清理不再需要的依赖包</span>
+sudo apt clean           <span class="pl-c"><span class="pl-c">#</span> 清理下载的包文件</span></pre></div>
+</li>
+<li><strong>CentOS/RHEL/Fedora 系列 (yum/dnf)</strong>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf update -y       <span class="pl-c"><span class="pl-c">#</span> 更新所有软件包 (CentOS 8+, Fedora)</span>
+<span class="pl-c"><span class="pl-c">#</span> 或者对于 CentOS 7 及以下</span>
+sudo yum update -y       <span class="pl-c"><span class="pl-c">#</span> 更新所有软件包</span></pre></div>
+</li>
+</ul>
+<h4>2. 用户管理与权限</h4>
+<p>创建非root用户并配置sudo权限是最佳实践，以增强系统安全性。</p>
+<ul>
+<li>
+<p><strong>创建新用户</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo adduser your_username <span class="pl-c"><span class="pl-c">#</span> 创建新用户并设置密码</span></pre></div>
+<ul>
+<li>根据提示输入密码和其他信息。</li>
+</ul>
+</li>
+<li>
+<p><strong>赋予新用户sudo权限</strong></p>
+<ul>
+<li>
+<p><strong>方法一：添加到sudo组 (推荐)</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo usermod -aG sudo your_username <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+sudo usermod -aG wheel your_username <span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL/Fedora</span></pre></div>
+</li>
+<li>
+<p><strong>方法二：编辑sudoers文件 (谨慎操作)</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo visudo</pre></div>
+<p>在文件中找到类似 <code class="notranslate">root ALL=(ALL:ALL) ALL</code> 的行，在其下方添加：</p>
+<pre class="notranslate"><code class="notranslate">your_username ALL=(ALL:ALL) ALL
+</code></pre>
+<p>保存并退出（通常是 <code class="notranslate">Ctrl+X</code>, <code class="notranslate">Y</code>, <code class="notranslate">Enter</code> 或 <code class="notranslate">Esc</code>, <code class="notranslate">:wq</code>, <code class="notranslate">Enter</code>）。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>切换到新用户</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">su - your_username</pre></div>
+<p>后续操作尽量使用新用户，需要root权限时使用 <code class="notranslate">sudo</code>。</p>
+</li>
+</ul>
+<h4>3. SSH服务配置（远程访问）</h4>
+<p>如果您的服务器需要远程访问，SSH是必不可少的。</p>
+<ul>
+<li>
+<p><strong>安装OpenSSH Server (如果未安装)</strong></p>
+<ul>
+<li><strong>Debian/Ubuntu</strong>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install openssh-server -y</pre></div>
+</li>
+<li><strong>CentOS/RHEL/Fedora</strong>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install openssh-server -y
+sudo systemctl <span class="pl-c1">enable</span> sshd --now <span class="pl-c"><span class="pl-c">#</span> 启用并启动SSH服务</span></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>修改SSH默认端口 (可选，增强安全性)</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo vi /etc/ssh/sshd_config</pre></div>
+<p>找到 <code class="notranslate">Port 22</code>，取消注释并修改为其他端口号（例如 <code class="notranslate">Port 2222</code>）。</p>
+<pre class="notranslate"><code class="notranslate">#Port 22
+Port 2222
+</code></pre>
+</li>
+<li>
+<p><strong>禁用root用户SSH登录 (强烈推荐)</strong><br>
+在 <code class="notranslate">/etc/ssh/sshd_config</code> 中找到 <code class="notranslate">PermitRootLogin</code>，修改为：</p>
+<pre class="notranslate"><code class="notranslate">PermitRootLogin no
+</code></pre>
+</li>
+<li>
+<p><strong>禁用密码登录，启用密钥登录 (强烈推荐)</strong></p>
+<ul>
+<li>在客户端生成SSH密钥对：<code class="notranslate">ssh-keygen</code></li>
+<li>将公钥 (<code class="notranslate">~/.ssh/id_rsa.pub</code>) 复制到服务器的 <code class="notranslate">~/.ssh/authorized_keys</code> 文件中。</li>
+<li>在 <code class="notranslate">/etc/ssh/sshd_config</code> 中修改：
+<pre class="notranslate"><code class="notranslate">PasswordAuthentication no
+PubkeyAuthentication yes
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>重启SSH服务</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart sshd</pre></div>
+<p><strong>注意：</strong> 在禁用密码登录前，请务必确认您的SSH密钥登录已成功配置并测试通过，否则可能导致无法登录！</p>
+</li>
+</ul>
+<h4>4. 防火墙配置</h4>
+<p>为系统设置防火墙规则，限制不必要的端口访问。</p>
+<ul>
+<li><strong>Debian/Ubuntu (ufw)</strong>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install ufw -y              <span class="pl-c"><span class="pl-c">#</span> 安装ufw</span>
+sudo ufw <span class="pl-c1">enable</span>                      <span class="pl-c"><span class="pl-c">#</span> 启用ufw</span>
+sudo ufw allow 2222/tcp              <span class="pl-c"><span class="pl-c">#</span> 允许SSH端口 (替换为您的SSH端口)</span>
+sudo ufw allow http                  <span class="pl-c"><span class="pl-c">#</span> 允许HTTP (80端口)</span>
+sudo ufw allow https                 <span class="pl-c"><span class="pl-c">#</span> 允许HTTPS (443端口)</span>
+sudo ufw status verbose              <span class="pl-c"><span class="pl-c">#</span> 查看防火墙状态</span></pre></div>
+</li>
+<li><strong>CentOS/RHEL/Fedora (firewalld)</strong>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl <span class="pl-c1">enable</span> firewalld --now <span class="pl-c"><span class="pl-c">#</span> 启用并启动firewalld</span>
+sudo firewall-cmd --permanent --add-port=2222/tcp <span class="pl-c"><span class="pl-c">#</span> 允许SSH端口</span>
+sudo firewall-cmd --permanent --add-service=http  <span class="pl-c"><span class="pl-c">#</span> 允许HTTP</span>
+sudo firewall-cmd --permanent --add-service=https <span class="pl-c"><span class="pl-c">#</span> 允许HTTPS</span>
+sudo firewall-cmd --reload           <span class="pl-c"><span class="pl-c">#</span> 重新加载防火墙规则</span>
+sudo firewall-cmd --list-all         <span class="pl-c"><span class="pl-c">#</span> 查看所有规则</span></pre></div>
+</li>
+</ul>
+<h4>5. 时区和时间同步</h4>
+<p>确保系统时间正确，这对于日志记录、证书验证和各种服务都非常重要。</p>
+<ul>
+<li>
+<p><strong>设置时区</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo timedatectl set-timezone Asia/Shanghai <span class="pl-c"><span class="pl-c">#</span> 设置为上海时区</span>
+timedatectl status                          <span class="pl-c"><span class="pl-c">#</span> 查看当前时区状态</span></pre></div>
+<ul>
+<li>您可以使用 <code class="notranslate">timedatectl list-timezones</code> 查看所有可用时区。</li>
+</ul>
+</li>
+<li>
+<p><strong>启用NTP时间同步</strong></p>
+<ul>
+<li><strong>Debian/Ubuntu</strong><br>
+通常 <code class="notranslate">systemd-timesyncd</code> 已经默认启用。
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install ntpdate -y <span class="pl-c"><span class="pl-c">#</span> 如果需要手动同步</span>
+sudo ntpdate -u pool.ntp.org <span class="pl-c"><span class="pl-c">#</span> 手动同步一次</span></pre></div>
+</li>
+<li><strong>CentOS/RHEL/Fedora</strong>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install chrony -y   <span class="pl-c"><span class="pl-c">#</span> 安装chrony (推荐替代ntp)</span>
+sudo systemctl <span class="pl-c1">enable</span> chronyd --now <span class="pl-c"><span class="pl-c">#</span> 启用并启动chronyd</span>
+chronyc sources -v           <span class="pl-c"><span class="pl-c">#</span> 查看NTP同步状态</span></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+<h4>6. 安装常用工具</h4>
+<p>安装一些日常管理和故障排除的实用工具。</p>
+<ul>
+<li>
+<p><strong>文本编辑器</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install vim -y <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+sudo dnf install vim -y <span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL/Fedora</span></pre></div>
+<p>或者使用 <code class="notranslate">nano</code> (通常已预装)。</p>
+</li>
+<li>
+<p><strong>网络工具</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install net-tools iputils-ping traceroute curl wget -y <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+sudo dnf install net-tools iputils-ping traceroute curl wget -y <span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL/Fedora</span></pre></div>
+<ul>
+<li><code class="notranslate">net-tools</code> 包含 <code class="notranslate">ifconfig</code>, <code class="notranslate">netstat</code> 等</li>
+<li><code class="notranslate">iputils-ping</code> 包含 <code class="notranslate">ping</code></li>
+<li><code class="notranslate">traceroute</code> 用于路由追踪</li>
+<li><code class="notranslate">curl</code>, <code class="notranslate">wget</code> 用于命令行下载</li>
+</ul>
+</li>
+<li>
+<p><strong>系统监控工具</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install htop iotop iftop -y <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+sudo dnf install htop iotop iftop -y <span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL/Fedora</span></pre></div>
+<ul>
+<li><code class="notranslate">htop</code> 交互式进程查看器</li>
+<li><code class="notranslate">iotop</code> 磁盘I/O监控</li>
+<li><code class="notranslate">iftop</code> 网络流量监控</li>
+</ul>
+</li>
+</ul>
+<h4>7. 内核参数优化 (可选，根据需求)</h4>
+<p>根据服务器用途，可能需要调整一些内核参数。</p>
+<ul>
+<li>
+<p><strong>修改文件描述符限制 (例如，对于高并发服务)</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo vi /etc/security/limits.conf</pre></div>
+<p>添加：</p>
+<pre class="notranslate"><code class="notranslate">* soft nofile 65535
+* hard nofile 65535
+</code></pre>
+<ul>
+<li><code class="notranslate">*</code> 表示所有用户，<code class="notranslate">nofile</code> 是文件描述符限制。</li>
+</ul>
+</li>
+<li>
+<p><strong>修改系统级文件描述符限制</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo vi /etc/sysctl.conf</pre></div>
+<p>添加或修改：</p>
+<pre class="notranslate"><code class="notranslate">fs.file-max = 65535
+</code></pre>
+<p>应用更改：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo sysctl -p</pre></div>
+</li>
+</ul>
+<h4>8. 定期维护</h4>
+<ul>
+<li><strong>设置自动更新 (可选，取决于环境)</strong>
+<ul>
+<li><strong>Debian/Ubuntu (unattended-upgrades)</strong>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install unattended-upgrades -y
+sudo dpkg-reconfigure --priority=low unattended-upgrades <span class="pl-c"><span class="pl-c">#</span> 配置自动更新</span></pre></div>
+</li>
+<li><strong>CentOS/RHEL/Fedora (dnf-automatic)</strong>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install dnf-automatic -y
+sudo vi /etc/dnf/automatic.conf <span class="pl-c"><span class="pl-c">#</span> 配置更新模式</span>
+sudo systemctl <span class="pl-c1">enable</span> dnf-automatic.timer --now <span class="pl-c"><span class="pl-c">#</span> 启用定时器</span></pre></div>
+</li>
+</ul>
+</li>
+<li><strong>定期清理日志</strong><br>
+通常由 <code class="notranslate">logrotate</code> 自动处理，但您可以检查其配置：
+<div class="highlight highlight-source-shell"><pre class="notranslate">ls /etc/logrotate.d/</pre></div>
+</li>
+</ul>
+<hr>
+<p>完成这些初始化配置后，您的Linux系统将更加健壮、安全且易于管理。请根据您的具体需求和系统环境进行调整。</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://weisunit.github.io">Weisunit Blog</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","weisunit/weisunit.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>
