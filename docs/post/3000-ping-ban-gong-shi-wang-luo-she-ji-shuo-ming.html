@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="<aside>
+💡
+本文以3000平办公室网络需求为示例，详细介绍从规划到实施的具体细节，希望对你有所帮助。">
+<meta property="og:title" content="3000平办公室网络设计说明">
+<meta property="og:description" content="<aside>
+💡
+本文以3000平办公室网络需求为示例，详细介绍从规划到实施的具体细节，希望对你有所帮助。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://weisunit.github.io/post/3000-ping-ban-gong-shi-wang-luo-she-ji-shuo-ming.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>3000平办公室网络设计说明</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">3000平办公室网络设计说明</h1>
+<div class="title-right">
+    <a href="https://weisunit.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/weisunit/weisunit.github.io/issues/11" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody">
+💡
+本文以3000平办公室网络需求为示例，详细介绍从规划到实施的具体细节，希望对你有所帮助。
+
+<h1>一. 办公室网络设计说明</h1>
+<h2>1. 网络架构设计</h2>
+<h3>1.1 三层网络架构</h3>
+<p>采用经典的三层网络架构：</p>
+<ul>
+<li><strong>核心层（Core Layer）</strong>：高速数据转发，连接汇聚层</li>
+<li><strong>汇聚层（Distribution Layer）</strong>：策略控制，连接核心层和接入层</li>
+<li><strong>接入层（Access Layer）</strong>：用户接入，连接终端设备</li>
+</ul>
+<h3>1.2 网络拓扑特点</h3>
+<ul>
+<li>核心层双机热备，保证高可用性</li>
+<li>汇聚层每层部署2台，提供冗余</li>
+<li>接入层星型连接到汇聚层</li>
+<li>无线网络独立部署，统一管理</li>
+</ul>
+<h2>2. VLAN规划</h2>
+<h3>2.1 VLAN分配表</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>VLAN ID</strong></th>
+<th><strong>VLAN名称</strong></th>
+<th><strong>网段</strong></th>
+<th><strong>用途</strong></th>
+<th><strong>网关</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td>Management</td>
+<td>192.168.10.0/24</td>
+<td>设备管理</td>
+<td>192.168.10.1</td>
+</tr>
+<tr>
+<td>100</td>
+<td>Office-1F</td>
+<td>10.1.100.0/24</td>
+<td>一楼办公区</td>
+<td>10.1.100.1</td>
+</tr>
+<tr>
+<td>200</td>
+<td>Office-2F</td>
+<td>10.1.200.0/24</td>
+<td>二楼办公区</td>
+<td>10.1.200.1</td>
+</tr>
+<tr>
+<td>300</td>
+<td>Office-3F</td>
+<td>10.1.300.0/24</td>
+<td>三楼办公区</td>
+<td>10.1.300.1</td>
+</tr>
+<tr>
+<td>110</td>
+<td>Meeting-1F</td>
+<td>10.1.110.0/24</td>
+<td>一楼会议室</td>
+<td>10.1.110.1</td>
+</tr>
+<tr>
+<td>210</td>
+<td>Meeting-2F</td>
+<td>10.1.210.0/24</td>
+<td>二楼会议室</td>
+<td>10.1.210.1</td>
+</tr>
+<tr>
+<td>310</td>
+<td>Meeting-3F</td>
+<td>10.1.310.0/24</td>
+<td>三楼会议室</td>
+<td>10.1.310.1</td>
+</tr>
+<tr>
+<td>50</td>
+<td>Server</td>
+<td>10.1.50.0/24</td>
+<td>服务器区</td>
+<td>10.1.50.1</td>
+</tr>
+<tr>
+<td>60</td>
+<td>DMZ</td>
+<td>10.1.60.0/24</td>
+<td>DMZ区域</td>
+<td>10.1.60.1</td>
+</tr>
+<tr>
+<td>400</td>
+<td>WiFi-Guest</td>
+<td>10.1.400.0/24</td>
+<td>访客无线</td>
+<td>10.1.400.1</td>
+</tr>
+<tr>
+<td>500</td>
+<td>WiFi-Office</td>
+<td>10.1.500.0/24</td>
+<td>办公无线</td>
+<td>10.1.500.1</td>
+</tr>
+<tr>
+<td>999</td>
+<td>Native</td>
+<td>-</td>
+<td>原生VLAN</td>
+<td>-</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>2.2 VLAN设计原则</h3>
+<ol>
+<li><strong>安全隔离</strong>：不同部门/功能区域独立VLAN</li>
+<li><strong>便于管理</strong>：VLAN ID与楼层/功能对应</li>
+<li><strong>扩展性</strong>：预留VLAN ID空间</li>
+<li><strong>性能优化</strong>：广播域控制在合理范围</li>
+</ol>
+<h2>3. IP地址规划</h2>
+<h3>3.1 地址分配原则</h3>
+<ul>
+<li><strong>私有地址</strong>：使用RFC1918私有地址段</li>
+<li><strong>层次化</strong>：按楼层和功能分配</li>
+<li><strong>预留空间</strong>：每个网段预留30%地址</li>
+<li><strong>管理地址</strong>：设备管理使用独立网段</li>
+</ul>
+<h3>3.2 设备IP地址分配</h3>
+<h3>核心设备</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>设备</strong></th>
+<th><strong>接口</strong></th>
+<th><strong>IP地址</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core-SW1</td>
+<td>VLANIF10</td>
+<td>192.168.10.2</td>
+<td>管理地址</td>
+</tr>
+<tr>
+<td>Core-SW2</td>
+<td>VLANIF10</td>
+<td>192.168.10.3</td>
+<td>管理地址</td>
+</tr>
+<tr>
+<td>Router1</td>
+<td>GE0/0/0</td>
+<td>公网IP</td>
+<td>外网接口</td>
+</tr>
+<tr>
+<td>Router1</td>
+<td>GE0/0/1</td>
+<td>10.1.1.1</td>
+<td>内网接口</td>
+</tr>
+<tr>
+<td>Router2</td>
+<td>GE0/0/0</td>
+<td>公网IP</td>
+<td>外网接口</td>
+</tr>
+<tr>
+<td>Router2</td>
+<td>GE0/0/1</td>
+<td>10.1.1.2</td>
+<td>内网接口</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>汇聚交换机</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>设备</strong></th>
+<th><strong>IP地址</strong></th>
+<th><strong>位置</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agg-SW1-1F</td>
+<td>192.168.10.11</td>
+<td>一楼汇聚1</td>
+</tr>
+<tr>
+<td>Agg-SW2-1F</td>
+<td>192.168.10.12</td>
+<td>一楼汇聚2</td>
+</tr>
+<tr>
+<td>Agg-SW1-2F</td>
+<td>192.168.10.21</td>
+<td>二楼汇聚1</td>
+</tr>
+<tr>
+<td>Agg-SW2-2F</td>
+<td>192.168.10.22</td>
+<td>二楼汇聚2</td>
+</tr>
+<tr>
+<td>Agg-SW1-3F</td>
+<td>192.168.10.31</td>
+<td>三楼汇聚1</td>
+</tr>
+<tr>
+<td>Agg-SW2-3F</td>
+<td>192.168.10.32</td>
+<td>三楼汇聚2</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>3.3 DHCP地址池</h3>
+<p>每个VLAN配置DHCP地址池，自动分配IP地址：</p>
+<ul>
+<li>地址范围：网段的50%-90%</li>
+<li>租期：8小时（办公时间）</li>
+<li>DNS服务器：114.114.114.114, 8.8.8.8</li>
+<li>域名：company.local</li>
+</ul>
+<h2>4. 路由设计</h2>
+<h3>4.1 路由协议</h3>
+<ul>
+<li><strong>内部路由</strong>：OSPF（Open Shortest Path First）</li>
+<li><strong>外部路由</strong>：BGP（Border Gateway Protocol）</li>
+<li><strong>默认路由</strong>：指向出口路由器</li>
+</ul>
+<h3>4.2 OSPF区域规划</h3>
+<ul>
+<li><strong>Area 0</strong>：骨干区域，包含核心设备</li>
+<li><strong>Area 1</strong>：办公区域</li>
+<li><strong>Area 2</strong>：服务器区域</li>
+<li><strong>Area 3</strong>：DMZ区域</li>
+</ul>
+<h2>5. 安全设计</h2>
+<h3>5.1 网络安全策略</h3>
+<ol>
+<li><strong>边界防护</strong>：部署防火墙，控制南北向流量</li>
+<li><strong>内网隔离</strong>：VLAN隔离，ACL访问控制</li>
+<li><strong>无线安全</strong>：WPA3加密，MAC地址认证</li>
+<li><strong>设备安全</strong>：SSH管理，SNMP v3</li>
+</ol>
+<h3>5.2 访问控制列表（ACL）</h3>
+<ul>
+<li>禁止办公网访问服务器管理端口</li>
+<li>允许特定管理员访问设备管理VLAN</li>
+<li>限制访客网络访问内网资源</li>
+<li>防止VLAN间非授权访问</li>
+</ul>
+<h2>6. QoS设计</h2>
+<h3>6.1 流量分类</h3>
+<ul>
+<li><strong>语音流量</strong>：最高优先级（EF）</li>
+<li><strong>视频流量</strong>：高优先级（AF41）</li>
+<li><strong>关键业务</strong>：中等优先级（AF31）</li>
+<li><strong>普通数据</strong>：默认优先级（BE）</li>
+</ul>
+<h3>6.2 带宽保证</h3>
+<ul>
+<li>语音流量：保证带宽，低延迟</li>
+<li>视频会议：保证带宽，低抖动</li>
+<li>关键业务：带宽保证50%</li>
+<li>普通上网：剩余带宽</li>
+</ul>
+<h2>7. 网络管理</h2>
+<h3>7.1 监控指标</h3>
+<ul>
+<li><strong>设备状态</strong>：CPU、内存、温度</li>
+<li><strong>接口状态</strong>：带宽利用率、错误包</li>
+<li><strong>网络性能</strong>：延迟、丢包率、吞吐量</li>
+<li><strong>安全事件</strong>：入侵检测、异常流量</li>
+</ul>
+<h3>7.2 管理工具</h3>
+<ul>
+<li><strong>华为eSight</strong>：统一网管平台</li>
+<li><strong>SNMP监控</strong>：实时状态监控</li>
+<li><strong>Syslog日志</strong>：集中日志管理</li>
+<li><strong>NetStream分析</strong>：流量分析</li>
+</ul>
+<h2>8. 容灾备份</h2>
+<h3>8.1 设备冗余</h3>
+<ul>
+<li>核心交换机：双机热备</li>
+<li>出口路由器：双机热备</li>
+<li>防火墙：双机热备</li>
+<li>无线控制器：双机热备</li>
+</ul>
+<h3>8.2 链路冗余</h3>
+<ul>
+<li>核心到汇聚：双链路聚合</li>
+<li>汇聚到接入：双上联（部分关键区域）</li>
+<li>外网链路：双运营商接入</li>
+</ul>
+<h2>9. 扩展规划</h2>
+<h3>9.1 端口扩展</h3>
+<ul>
+<li>接入层预留30%端口</li>
+<li>汇聚层预留40%端口</li>
+<li>核心层预留50%端口</li>
+</ul>
+<h3>9.2 带宽扩展</h3>
+<ul>
+<li>核心骨干：支持40G扩展到100G</li>
+<li>汇聚上联：支持万兆扩展</li>
+<li>接入下联：全千兆部署</li>
+</ul>
+<h3>9.3 功能扩展</h3>
+<ul>
+<li>预留服务器机柜空间</li>
+<li>支持云网融合</li>
+<li>预留IoT设备接入</li>
+<li>支持SD-WAN部署</li>
+</ul>
+<h1>二. 采购设备说明</h1>
+<h2>办公室基本信息</h2>
+<ul>
+<li>总面积：3000平米</li>
+<li>预计工位：300个</li>
+<li>楼层：3层，每层1000平米</li>
+<li>会议室：15个</li>
+<li>服务器机房：1个（50平米）</li>
+</ul>
+<h2>核心设备清单</h2>
+<h3>1. 核心交换机</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>设备型号</strong></th>
+<th><strong>数量</strong></th>
+<th><strong>规格</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>华为S12700E-6</td>
+<td>2台</td>
+<td>48端口万兆+4端口40G</td>
+<td>核心层，双机热备</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>2. 汇聚交换机</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>设备型号</strong></th>
+<th><strong>数量</strong></th>
+<th><strong>规格</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>华为S5735-L48T4S-A1</td>
+<td>6台</td>
+<td>48端口千兆+4端口万兆SFP+</td>
+<td>每层2台，汇聚层</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>3. 接入交换机</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>设备型号</strong></th>
+<th><strong>数量</strong></th>
+<th><strong>规格</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>华为S2750-28TP-PWR-EI</td>
+<td>20台</td>
+<td>24端口千兆PoE+4端口千兆SFP</td>
+<td>接入层，支持PoE供电</td>
+</tr>
+<tr>
+<td>华为S2750-52P-EI</td>
+<td>10台</td>
+<td>48端口千兆+4端口千兆SFP</td>
+<td>高密度接入</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>4. 路由器</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>设备型号</strong></th>
+<th><strong>数量</strong></th>
+<th><strong>规格</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>华为AR6300-S</td>
+<td>2台</td>
+<td>双机热备</td>
+<td>出口路由器</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>5. 防火墙</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>设备型号</strong></th>
+<th><strong>数量</strong></th>
+<th><strong>规格</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>华为USG6650</td>
+<td>2台</td>
+<td>吞吐量20Gbps</td>
+<td>边界安全防护</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>6. 无线设备</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>设备型号</strong></th>
+<th><strong>数量</strong></th>
+<th><strong>规格</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>华为AC6605</td>
+<td>2台</td>
+<td>支持1024个AP</td>
+<td>无线控制器，双机热备</td>
+</tr>
+<tr>
+<td>华为AP7060DN</td>
+<td>60台</td>
+<td>Wi-Fi 6，双频</td>
+<td>室内无线接入点</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>7. 服务器设备</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>设备型号</strong></th>
+<th><strong>数量</strong></th>
+<th><strong>规格</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>华为FusionServer 2288H V5</td>
+<td>4台</td>
+<td>2U机架服务器</td>
+<td>应用服务器</td>
+</tr>
+<tr>
+<td>华为OceanStor 2600 V5</td>
+<td>1套</td>
+<td>存储阵列</td>
+<td>数据存储</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>8. 网络管理</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>设备型号</strong></th>
+<th><strong>数量</strong></th>
+<th><strong>规格</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>华为eSight</td>
+<td>1套</td>
+<td>网管软件</td>
+<td>统一网络管理</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>线缆及配件</h2>
+<h3>光纤线缆</h3>
+<ul>
+<li>万兆多模光纤：200米</li>
+<li>千兆多模光纤：500米</li>
+<li>万兆单模光纤：100米</li>
+</ul>
+<h3>网线</h3>
+<ul>
+<li>六类网线：15000米</li>
+<li>超六类网线：5000米</li>
+</ul>
+<h3>机柜及配件</h3>
+<ul>
+<li>42U标准机柜：8个</li>
+<li>24U壁挂机柜：15个</li>
+<li>PDU电源：30个</li>
+<li>理线器：100个</li>
+</ul>
+<h2>设备特点</h2>
+<ol>
+<li><strong>高可靠性</strong>：核心设备双机热备，99.99%可用性</li>
+<li><strong>高性能</strong>：万兆骨干，千兆到桌面</li>
+<li><strong>PoE供电</strong>：支持IP电话、无线AP供电</li>
+<li><strong>绿色节能</strong>：华为设备功耗优化</li>
+<li><strong>易扩展</strong>：预留30%端口扩展空间</li>
+</ol>
+<h1>三. 主要网络设备配置部署</h1>
+<h3>配置原则</h3>
+<ol>
+<li><strong>自下而上</strong>：从核心设备开始，逐步向接入设备配置</li>
+<li><strong>先基础后高级</strong>：先配置基本连通性，再配置高级功能</li>
+<li><strong>分阶段验证</strong>：每个阶段完成后进行连通性测试</li>
+<li><strong>备份配置</strong>：每次重要配置后及时保存</li>
+</ol>
+<h2>第一阶段：核心设备基础配置</h2>
+<h3>1.1 核心交换机1配置（Core-Switch-1）</h3>
+<h3>设备信息</h3>
+<ul>
+<li><strong>设备型号</strong>：华为 S12700E-6</li>
+<li><strong>管理IP</strong>：192.168.10.11/24</li>
+<li><strong>角色</strong>：主核心交换机</li>
+</ul>
+<h3>配置步骤</h3>
+<p><strong>步骤1：初始化设备</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 通过Console口连接设备
+# 首次启动，进入系统视图
+&lt;Huawei&gt;system-view
+[Huawei]sysname Core-Switch-1
+[Core-Switch-1]clock timezone BJ add 08:00:00
+</code></pre>
+<p><strong>步骤2：创建管理用户</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 创建本地用户
+[Core-Switch-1]aaa
+[Core-Switch-1-aaa]local-user admin password cipher Huawei@123
+[Core-Switch-1-aaa]local-user admin privilege level 15
+[Core-Switch-1-aaa]local-user admin service-type ssh telnet terminal
+[Core-Switch-1-aaa]quit
+
+# 配置用户界面
+[Core-Switch-1]user-interface vty 0 4
+[Core-Switch-1-ui-vty0-4]authentication-mode aaa
+[Core-Switch-1-ui-vty0-4]protocol inbound ssh
+[Core-Switch-1-ui-vty0-4]quit
+</code></pre>
+<p><strong>步骤3：配置SSH服务</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 生成RSA密钥
+[Core-Switch-1]rsa local-key-pair create
+# 启用SSH服务
+[Core-Switch-1]ssh server enable
+[Core-Switch-1]stelnet server enable
+</code></pre>
+<p><strong>步骤4：创建管理VLAN</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 创建管理VLAN
+[Core-Switch-1]vlan 10
+[Core-Switch-1-vlan10]description Management
+[Core-Switch-1-vlan10]quit
+
+# 配置管理接口
+[Core-Switch-1]interface vlanif 10
+[Core-Switch-1-Vlanif10]ip address 192.168.10.11 24
+[Core-Switch-1-Vlanif10]quit
+</code></pre>
+<p><strong>步骤5：配置默认路由（临时）</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置临时默认路由用于管理
+[Core-Switch-1]ip route-static 0.0.0.0 0.0.0.0 192.168.10.1
+</code></pre>
+<p><strong>步骤6：保存配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Core-Switch-1]save
+# 确认保存
+The current configuration will be written to the device.
+Are you sure to continue?[Y/N]y
+</code></pre>
+<h3>1.2 核心交换机2配置（Core-Switch-2）</h3>
+<h3>设备信息</h3>
+<ul>
+<li><strong>设备型号</strong>：华为 S12700E-6</li>
+<li><strong>管理IP</strong>：192.168.10.12/24</li>
+<li><strong>角色</strong>：备核心交换机</li>
+</ul>
+<h3>配置步骤</h3>
+<p><strong>重复核心交换机1的步骤1-6，注意以下差异：</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 设备名称
+[Huawei]sysname Core-Switch-2
+
+# 管理IP地址
+[Core-Switch-2]interface vlanif 10
+[Core-Switch-2-Vlanif10]ip address 192.168.10.12 24
+</code></pre>
+<h3>1.3 验证核心交换机基础连通性</h3>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 在Core-Switch-1上测试
+[Core-Switch-1]ping 192.168.10.12
+# 应该能够ping通Core-Switch-2
+
+# 测试SSH连接
+[Core-Switch-1]ssh client 192.168.10.12
+</code></pre>
+<h2>第二阶段：核心设备完整配置</h2>
+<h3>2.1 核心交换机1完整VLAN配置</h3>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 创建所有业务VLAN
+[Core-Switch-1]vlan batch 100 to 102 200 to 202 300 400 500 600
+
+# 配置VLAN描述
+[Core-Switch-1]vlan 100
+[Core-Switch-1-vlan100]description Office-1F
+[Core-Switch-1-vlan100]quit
+
+[Core-Switch-1]vlan 101
+[Core-Switch-1-vlan101]description Office-2F
+[Core-Switch-1-vlan101]quit
+
+[Core-Switch-1]vlan 102
+[Core-Switch-1-vlan102]description Office-3F
+[Core-Switch-1-vlan102]quit
+
+[Core-Switch-1]vlan 200
+[Core-Switch-1-vlan200]description Meeting-1F
+[Core-Switch-1-vlan200]quit
+
+[Core-Switch-1]vlan 201
+[Core-Switch-1-vlan201]description Meeting-2F
+[Core-Switch-1-vlan201]quit
+
+[Core-Switch-1]vlan 202
+[Core-Switch-1-vlan202]description Meeting-3F
+[Core-Switch-1-vlan202]quit
+
+[Core-Switch-1]vlan 300
+[Core-Switch-1-vlan300]description Server
+[Core-Switch-1-vlan300]quit
+
+[Core-Switch-1]vlan 400
+[Core-Switch-1-vlan400]description DMZ
+[Core-Switch-1-vlan400]quit
+
+[Core-Switch-1]vlan 500
+[Core-Switch-1-vlan500]description Guest-Wireless
+[Core-Switch-1-vlan500]quit
+
+[Core-Switch-1]vlan 600
+[Core-Switch-1-vlan600]description Office-Wireless
+[Core-Switch-1-vlan600]quit
+</code></pre>
+<h3>2.2 配置VLANIF接口和DHCP中继</h3>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置办公区VLANIF接口
+[Core-Switch-1]interface vlanif 100
+[Core-Switch-1-Vlanif100]ip address 192.168.100.252 24
+[Core-Switch-1-Vlanif100]dhcp select relay
+[Core-Switch-1-Vlanif100]dhcp relay server-ip 192.168.10.100
+[Core-Switch-1-Vlanif100]quit
+
+[Core-Switch-1]interface vlanif 101
+[Core-Switch-1-Vlanif101]ip address 192.168.101.252 24
+[Core-Switch-1-Vlanif101]dhcp select relay
+[Core-Switch-1-Vlanif101]dhcp relay server-ip 192.168.10.100
+[Core-Switch-1-Vlanif101]quit
+
+[Core-Switch-1]interface vlanif 102
+[Core-Switch-1-Vlanif102]ip address 192.168.102.252 24
+[Core-Switch-1-Vlanif102]dhcp select relay
+[Core-Switch-1-Vlanif102]dhcp relay server-ip 192.168.10.100
+[Core-Switch-1-Vlanif102]quit
+
+# 配置会议室VLANIF接口
+[Core-Switch-1]interface vlanif 200
+[Core-Switch-1-Vlanif200]ip address 192.168.200.252 24
+[Core-Switch-1-Vlanif200]dhcp select relay
+[Core-Switch-1-Vlanif200]dhcp relay server-ip 192.168.10.100
+[Core-Switch-1-Vlanif200]quit
+
+[Core-Switch-1]interface vlanif 201
+[Core-Switch-1-Vlanif201]ip address 192.168.201.252 24
+[Core-Switch-1-Vlanif201]dhcp select relay
+[Core-Switch-1-Vlanif201]dhcp relay server-ip 192.168.10.100
+[Core-Switch-1-Vlanif201]quit
+
+[Core-Switch-1]interface vlanif 202
+[Core-Switch-1-Vlanif202]ip address 192.168.202.252 24
+[Core-Switch-1-Vlanif202]dhcp select relay
+[Core-Switch-1-Vlanif202]dhcp relay server-ip 192.168.10.100
+[Core-Switch-1-Vlanif202]quit
+
+# 配置服务器和DMZ VLANIF接口
+[Core-Switch-1]interface vlanif 300
+[Core-Switch-1-Vlanif300]ip address 192.168.30.252 24
+[Core-Switch-1-Vlanif300]quit
+
+[Core-Switch-1]interface vlanif 400
+[Core-Switch-1-Vlanif400]ip address 192.168.40.252 24
+[Core-Switch-1-Vlanif400]quit
+
+# 配置无线VLANIF接口
+[Core-Switch-1]interface vlanif 500
+[Core-Switch-1-Vlanif500]ip address 192.168.50.252 24
+[Core-Switch-1-Vlanif500]dhcp select relay
+[Core-Switch-1-Vlanif500]dhcp relay server-ip 192.168.10.100
+[Core-Switch-1-Vlanif500]quit
+
+[Core-Switch-1]interface vlanif 600
+[Core-Switch-1-Vlanif600]ip address 192.168.60.252 24
+[Core-Switch-1-Vlanif600]dhcp select relay
+[Core-Switch-1-Vlanif600]dhcp relay server-ip 192.168.10.100
+[Core-Switch-1-Vlanif600]quit
+</code></pre>
+<h3>2.3 配置物理接口</h3>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置连接核心交换机2的接口（链路聚合）
+[Core-Switch-1]interface eth-trunk 1
+[Core-Switch-1-Eth-Trunk1]description Link-to-Core-Switch-2
+[Core-Switch-1-Eth-Trunk1]port link-type trunk
+[Core-Switch-1-Eth-Trunk1]port trunk allow-pass vlan all
+[Core-Switch-1-Eth-Trunk1]quit
+
+[Core-Switch-1]interface 10ge 1/0/1
+[Core-Switch-1-10GE1/0/1]eth-trunk 1
+[Core-Switch-1-10GE1/0/1]quit
+
+[Core-Switch-1]interface 10ge 1/0/2
+[Core-Switch-1-10GE1/0/2]eth-trunk 1
+[Core-Switch-1-10GE1/0/2]quit
+
+# 配置连接出口路由器的接口
+[Core-Switch-1]interface 10ge 1/0/3
+[Core-Switch-1-10GE1/0/3]description Link-to-Router-1
+[Core-Switch-1-10GE1/0/3]port link-type trunk
+[Core-Switch-1-10GE1/0/3]port trunk allow-pass vlan 10 300 400
+[Core-Switch-1-10GE1/0/3]quit
+
+# 配置连接汇聚交换机的接口
+[Core-Switch-1]interface 10ge 1/0/4
+[Core-Switch-1-10GE1/0/4]description Link-to-Agg-Switch-1F-1
+[Core-Switch-1-10GE1/0/4]port link-type trunk
+[Core-Switch-1-10GE1/0/4]port trunk allow-pass vlan 10 100 200 500 600
+[Core-Switch-1-10GE1/0/4]quit
+
+[Core-Switch-1]interface 10ge 1/0/5
+[Core-Switch-1-10GE1/0/5]description Link-to-Agg-Switch-1F-2
+[Core-Switch-1-10GE1/0/5]port link-type trunk
+[Core-Switch-1-10GE1/0/5]port trunk allow-pass vlan 10 100 200 500 600
+[Core-Switch-1-10GE1/0/5]quit
+
+# 继续配置其他汇聚交换机连接...
+</code></pre>
+<h3>2.4 配置OSPF路由协议</h3>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 启用OSPF
+[Core-Switch-1]ospf 1 router-id 192.168.10.11
+[Core-Switch-1-ospf-1]area 0
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.10.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.100.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.101.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.102.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.200.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.201.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.202.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.30.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.40.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.50.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]network 192.168.60.0 0.0.0.255
+[Core-Switch-1-ospf-1-area-0.0.0.0]quit
+[Core-Switch-1-ospf-1]quit
+</code></pre>
+<h3>2.5 配置VRRP（网关冗余）</h3>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 在各VLANIF接口配置VRRP
+[Core-Switch-1]interface vlanif 100
+[Core-Switch-1-Vlanif100]vrrp vrid 100 virtual-ip 192.168.100.254
+[Core-Switch-1-Vlanif100]vrrp vrid 100 priority 120
+[Core-Switch-1-Vlanif100]vrrp vrid 100 preempt-mode timer delay 20
+[Core-Switch-1-Vlanif100]quit
+
+[Core-Switch-1]interface vlanif 101
+[Core-Switch-1-Vlanif101]vrrp vrid 101 virtual-ip 192.168.101.254
+[Core-Switch-1-Vlanif101]vrrp vrid 101 priority 120
+[Core-Switch-1-Vlanif101]vrrp vrid 101 preempt-mode timer delay 20
+[Core-Switch-1-Vlanif101]quit
+
+# 继续配置其他VLAN的VRRP...
+</code></pre>
+<h3>2.6 保存核心交换机1配置</h3>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Core-Switch-1]save
+</code></pre>
+<h3>2.7 核心交换机2配置</h3>
+<p><strong>重复2.1-2.6的配置，注意以下差异：</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># OSPF Router ID
+[Core-Switch-2]ospf 1 router-id 192.168.10.12
+
+# VRRP优先级（备设备优先级较低）
+[Core-Switch-2]interface vlanif 100
+[Core-Switch-2-Vlanif100]vrrp vrid 100 virtual-ip 192.168.100.254
+[Core-Switch-2-Vlanif100]vrrp vrid 100 priority 100
+[Core-Switch-2-Vlanif100]quit
+</code></pre>
+<h2>第三阶段：路由器配置</h2>
+<h3>3.1 出口路由器配置（Router-1）</h3>
+<h3>设备信息</h3>
+<ul>
+<li><strong>设备型号</strong>：华为 AR6300-S</li>
+<li><strong>管理IP</strong>：192.168.10.1/24</li>
+<li><strong>角色</strong>：主出口路由器</li>
+</ul>
+<h3>配置步骤</h3>
+<p><strong>步骤1：基础配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">&lt;Huawei&gt;system-view
+[Huawei]sysname Router-1
+[Router-1]clock timezone BJ add 08:00:00
+
+# 创建管理用户
+[Router-1]aaa
+[Router-1-aaa]local-user admin password cipher Huawei@123
+[Router-1-aaa]local-user admin privilege level 15
+[Router-1-aaa]local-user admin service-type ssh telnet terminal
+[Router-1-aaa]quit
+
+# 配置SSH
+[Router-1]user-interface vty 0 4
+[Router-1-ui-vty0-4]authentication-mode aaa
+[Router-1-ui-vty0-4]protocol inbound ssh
+[Router-1-ui-vty0-4]quit
+
+[Router-1]rsa local-key-pair create
+[Router-1]ssh server enable
+[Router-1]stelnet server enable
+</code></pre>
+<p><strong>步骤2：配置接口</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置管理接口
+[Router-1]interface gigabitethernet 0/0/0
+[Router-1-GigabitEthernet0/0/0]description Management
+[Router-1-GigabitEthernet0/0/0]ip address 192.168.10.1 24
+[Router-1-GigabitEthernet0/0/0]quit
+
+# 配置外网接口（连接ISP）
+[Router-1]interface gigabitethernet 0/0/1
+[Router-1-GigabitEthernet0/0/1]description WAN-to-ISP
+[Router-1-GigabitEthernet0/0/1]ip address 202.96.128.100 30
+[Router-1-GigabitEthernet0/0/1]quit
+
+# 配置内网接口（连接核心交换机）
+[Router-1]interface gigabitethernet 0/0/2
+[Router-1-GigabitEthernet0/0/2]description LAN-to-Core
+[Router-1-GigabitEthernet0/0/2]quit
+
+# 创建子接口
+[Router-1]interface gigabitethernet 0/0/2.10
+[Router-1-GigabitEthernet0/0/2.10]description Management-VLAN
+[Router-1-GigabitEthernet0/0/2.10]dot1q termination vid 10
+[Router-1-GigabitEthernet0/0/2.10]ip address 192.168.10.2 24
+[Router-1-GigabitEthernet0/0/2.10]arp broadcast enable
+[Router-1-GigabitEthernet0/0/2.10]quit
+
+[Router-1]interface gigabitethernet 0/0/2.300
+[Router-1-GigabitEthernet0/0/2.300]description Server-VLAN
+[Router-1-GigabitEthernet0/0/2.300]dot1q termination vid 300
+[Router-1-GigabitEthernet0/0/2.300]ip address 192.168.30.1 24
+[Router-1-GigabitEthernet0/0/2.300]arp broadcast enable
+[Router-1-GigabitEthernet0/0/2.300]quit
+
+[Router-1]interface gigabitethernet 0/0/2.400
+[Router-1-GigabitEthernet0/0/2.400]description DMZ-VLAN
+[Router-1-GigabitEthernet0/0/2.400]dot1q termination vid 400
+[Router-1-GigabitEthernet0/0/2.400]ip address 192.168.40.1 24
+[Router-1-GigabitEthernet0/0/2.400]arp broadcast enable
+[Router-1-GigabitEthernet0/0/2.400]quit
+</code></pre>
+<p><strong>步骤3：配置路由</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置默认路由
+[Router-1]ip route-static 0.0.0.0 0.0.0.0 202.96.128.101
+
+# 配置OSPF
+[Router-1]ospf 1 router-id 192.168.10.1
+[Router-1-ospf-1]default-route-advertise always
+[Router-1-ospf-1]area 0
+[Router-1-ospf-1-area-0.0.0.0]network 192.168.10.0 0.0.0.255
+[Router-1-ospf-1-area-0.0.0.0]network 192.168.30.0 0.0.0.255
+[Router-1-ospf-1-area-0.0.0.0]network 192.168.40.0 0.0.0.255
+[Router-1-ospf-1-area-0.0.0.0]quit
+[Router-1-ospf-1]quit
+</code></pre>
+<p><strong>步骤4：配置NAT</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 创建ACL用于NAT
+[Router-1]acl number 2000
+[Router-1-acl-basic-2000]rule 5 permit source 192.168.0.0 0.0.255.255
+[Router-1-acl-basic-2000]quit
+
+# 配置NAT
+[Router-1]nat address-group 1 202.96.128.100 202.96.128.100
+[Router-1]interface gigabitethernet 0/0/1
+[Router-1-GigabitEthernet0/0/1]nat outbound 2000 address-group 1
+[Router-1-GigabitEthernet0/0/1]quit
+
+# 配置服务器端口映射（示例）
+[Router-1]nat server protocol tcp global 202.96.128.100 80 inside 192.168.30.10 80
+[Router-1]nat server protocol tcp global 202.96.128.100 443 inside 192.168.30.10 443
+</code></pre>
+<p><strong>步骤5：保存配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Router-1]save
+</code></pre>
+<h2>第四阶段：防火墙配置</h2>
+<h3>4.1 防火墙配置（Firewall-1）</h3>
+<h3>设备信息</h3>
+<ul>
+<li><strong>设备型号</strong>：华为 USG6650</li>
+<li><strong>管理IP</strong>：192.168.10.20/24</li>
+<li><strong>部署模式</strong>：透明模式</li>
+</ul>
+<h3>配置步骤</h3>
+<p><strong>步骤1：基础配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">&lt;USG6650&gt;system-view
+[USG6650]sysname Firewall-1
+[Firewall-1]clock timezone BJ add 08:00:00
+
+# 创建管理用户
+[Firewall-1]aaa
+[Firewall-1-aaa]local-user admin password cipher Huawei@123
+[Firewall-1-aaa]local-user admin privilege level 15
+[Firewall-1-aaa]local-user admin service-type ssh web terminal
+[Firewall-1-aaa]quit
+
+# 配置SSH和Web管理
+[Firewall-1]user-interface vty 0 4
+[Firewall-1-ui-vty0-4]authentication-mode aaa
+[Firewall-1-ui-vty0-4]protocol inbound ssh
+[Firewall-1-ui-vty0-4]quit
+
+[Firewall-1]rsa local-key-pair create
+[Firewall-1]ssh server enable
+[Firewall-1]stelnet server enable
+
+[Firewall-1]web-manager enable
+[Firewall-1]web-manager port 8443
+</code></pre>
+<p><strong>步骤2：配置接口</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置管理接口
+[Firewall-1]interface gigabitethernet 0/0/0
+[Firewall-1-GigabitEthernet0/0/0]description Management
+[Firewall-1-GigabitEthernet0/0/0]ip address 192.168.10.20 24
+[Firewall-1-GigabitEthernet0/0/0]service-manage ping permit
+[Firewall-1-GigabitEthernet0/0/0]service-manage ssh permit
+[Firewall-1-GigabitEthernet0/0/0]service-manage https permit
+[Firewall-1-GigabitEthernet0/0/0]quit
+
+# 配置外网接口
+[Firewall-1]interface gigabitethernet 1/0/0
+[Firewall-1-GigabitEthernet1/0/0]description WAN-Interface
+[Firewall-1-GigabitEthernet1/0/0]ip address 202.96.128.102 30
+[Firewall-1-GigabitEthernet1/0/0]quit
+
+# 配置内网接口
+[Firewall-1]interface gigabitethernet 1/0/1
+[Firewall-1-GigabitEthernet1/0/1]description LAN-Interface
+[Firewall-1-GigabitEthernet1/0/1]ip address 192.168.1.1 24
+[Firewall-1-GigabitEthernet1/0/1]quit
+
+# 配置DMZ接口
+[Firewall-1]interface gigabitethernet 1/0/2
+[Firewall-1-GigabitEthernet1/0/2]description DMZ-Interface
+[Firewall-1-GigabitEthernet1/0/2]ip address 192.168.40.1 24
+[Firewall-1-GigabitEthernet1/0/2]quit
+</code></pre>
+<p><strong>步骤3：配置安全区域</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 创建安全区域
+[Firewall-1]firewall zone trust
+[Firewall-1-zone-trust]add interface gigabitethernet 1/0/1
+[Firewall-1-zone-trust]quit
+
+[Firewall-1]firewall zone untrust
+[Firewall-1-zone-untrust]add interface gigabitethernet 1/0/0
+[Firewall-1-zone-untrust]quit
+
+[Firewall-1]firewall zone dmz
+[Firewall-1-zone-dmz]add interface gigabitethernet 1/0/2
+[Firewall-1-zone-dmz]quit
+
+[Firewall-1]firewall zone local
+[Firewall-1-zone-local]add interface gigabitethernet 0/0/0
+[Firewall-1-zone-local]quit
+</code></pre>
+<p><strong>步骤4：配置安全策略</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 内网访问外网策略
+[Firewall-1]security-policy
+[Firewall-1-policy-security]rule name trust_to_untrust
+[Firewall-1-policy-security-rule-trust_to_untrust]source-zone trust
+[Firewall-1-policy-security-rule-trust_to_untrust]destination-zone untrust
+[Firewall-1-policy-security-rule-trust_to_untrust]action permit
+[Firewall-1-policy-security-rule-trust_to_untrust]quit
+
+# 外网访问DMZ策略
+[Firewall-1-policy-security]rule name untrust_to_dmz
+[Firewall-1-policy-security-rule-untrust_to_dmz]source-zone untrust
+[Firewall-1-policy-security-rule-untrust_to_dmz]destination-zone dmz
+[Firewall-1-policy-security-rule-untrust_to_dmz]destination-address 192.168.40.10 mask 255.255.255.255
+[Firewall-1-policy-security-rule-untrust_to_dmz]service http https
+[Firewall-1-policy-security-rule-untrust_to_dmz]action permit
+[Firewall-1-policy-security-rule-untrust_to_dmz]quit
+
+# 内网访问DMZ策略
+[Firewall-1-policy-security]rule name trust_to_dmz
+[Firewall-1-policy-security-rule-trust_to_dmz]source-zone trust
+[Firewall-1-policy-security-rule-trust_to_dmz]destination-zone dmz
+[Firewall-1-policy-security-rule-trust_to_dmz]action permit
+[Firewall-1-policy-security-rule-trust_to_dmz]quit
+
+[Firewall-1-policy-security]quit
+</code></pre>
+<p><strong>步骤5：保存配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Firewall-1]save
+</code></pre>
+<h2>第五阶段：汇聚交换机配置</h2>
+<h3>5.1 一楼汇聚交换机配置（Agg-Switch-1F-1）</h3>
+<h3>设备信息</h3>
+<ul>
+<li><strong>设备型号</strong>：华为 S5735-L48T4S-A1</li>
+<li><strong>管理IP</strong>：192.168.10.21/24</li>
+<li><strong>角色</strong>：一楼汇聚交换机1</li>
+</ul>
+<h3>配置步骤</h3>
+<p><strong>步骤1：基础配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">&lt;Huawei&gt;system-view
+[Huawei]sysname Agg-Switch-1F-1
+[Agg-Switch-1F-1]clock timezone BJ add 08:00:00
+
+# 创建管理用户
+[Agg-Switch-1F-1]aaa
+[Agg-Switch-1F-1-aaa]local-user admin password cipher Huawei@123
+[Agg-Switch-1F-1-aaa]local-user admin privilege level 15
+[Agg-Switch-1F-1-aaa]local-user admin service-type ssh telnet terminal
+[Agg-Switch-1F-1-aaa]quit
+
+# 配置SSH
+[Agg-Switch-1F-1]user-interface vty 0 4
+[Agg-Switch-1F-1-ui-vty0-4]authentication-mode aaa
+[Agg-Switch-1F-1-ui-vty0-4]protocol inbound ssh
+[Agg-Switch-1F-1-ui-vty0-4]quit
+
+[Agg-Switch-1F-1]rsa local-key-pair create
+[Agg-Switch-1F-1]ssh server enable
+[Agg-Switch-1F-1]stelnet server enable
+</code></pre>
+<p><strong>步骤2：创建VLAN</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 创建相关VLAN
+[Agg-Switch-1F-1]vlan batch 10 100 200 500 600
+
+# 配置VLAN描述
+[Agg-Switch-1F-1]vlan 10
+[Agg-Switch-1F-1-vlan10]description Management
+[Agg-Switch-1F-1-vlan10]quit
+
+[Agg-Switch-1F-1]vlan 100
+[Agg-Switch-1F-1-vlan100]description Office-1F
+[Agg-Switch-1F-1-vlan100]quit
+
+[Agg-Switch-1F-1]vlan 200
+[Agg-Switch-1F-1-vlan200]description Meeting-1F
+[Agg-Switch-1F-1-vlan200]quit
+
+[Agg-Switch-1F-1]vlan 500
+[Agg-Switch-1F-1-vlan500]description Guest-Wireless
+[Agg-Switch-1F-1-vlan500]quit
+
+[Agg-Switch-1F-1]vlan 600
+[Agg-Switch-1F-1-vlan600]description Office-Wireless
+[Agg-Switch-1F-1-vlan600]quit
+</code></pre>
+<p><strong>步骤3：配置管理接口</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Agg-Switch-1F-1]interface vlanif 10
+[Agg-Switch-1F-1-Vlanif10]ip address 192.168.10.21 24
+[Agg-Switch-1F-1-Vlanif10]quit
+</code></pre>
+<p><strong>步骤4：配置上联接口（连接核心交换机）</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置上联接口1（连接Core-Switch-1）
+[Agg-Switch-1F-1]interface gigabitethernet 0/0/49
+[Agg-Switch-1F-1-GigabitEthernet0/0/49]description Uplink-to-Core-Switch-1
+[Agg-Switch-1F-1-GigabitEthernet0/0/49]port link-type trunk
+[Agg-Switch-1F-1-GigabitEthernet0/0/49]port trunk allow-pass vlan 10 100 200 500 600
+[Agg-Switch-1F-1-GigabitEthernet0/0/49]quit
+
+# 配置上联接口2（连接Core-Switch-2）
+[Agg-Switch-1F-1]interface gigabitethernet 0/0/50
+[Agg-Switch-1F-1-GigabitEthernet0/0/50]description Uplink-to-Core-Switch-2
+[Agg-Switch-1F-1-GigabitEthernet0/0/50]port link-type trunk
+[Agg-Switch-1F-1-GigabitEthernet0/0/50]port trunk allow-pass vlan 10 100 200 500 600
+[Agg-Switch-1F-1-GigabitEthernet0/0/50]quit
+</code></pre>
+<p><strong>步骤5：配置下联接口（连接接入交换机）</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置连接接入交换机的接口
+[Agg-Switch-1F-1]interface gigabitethernet 0/0/1
+[Agg-Switch-1F-1-GigabitEthernet0/0/1]description Link-to-Access-Switch-1F-Office-1
+[Agg-Switch-1F-1-GigabitEthernet0/0/1]port link-type trunk
+[Agg-Switch-1F-1-GigabitEthernet0/0/1]port trunk allow-pass vlan 10 100
+[Agg-Switch-1F-1-GigabitEthernet0/0/1]quit
+
+[Agg-Switch-1F-1]interface gigabitethernet 0/0/2
+[Agg-Switch-1F-1-GigabitEthernet0/0/2]description Link-to-Access-Switch-1F-Office-2
+[Agg-Switch-1F-1-GigabitEthernet0/0/2]port link-type trunk
+[Agg-Switch-1F-1-GigabitEthernet0/0/2]port trunk allow-pass vlan 10 100
+[Agg-Switch-1F-1-GigabitEthernet0/0/2]quit
+
+[Agg-Switch-1F-1]interface gigabitethernet 0/0/3
+[Agg-Switch-1F-1-GigabitEthernet0/0/3]description Link-to-Access-Switch-1F-Meeting
+[Agg-Switch-1F-1-GigabitEthernet0/0/3]port link-type trunk
+[Agg-Switch-1F-1-GigabitEthernet0/0/3]port trunk allow-pass vlan 10 200
+[Agg-Switch-1F-1-GigabitEthernet0/0/3]quit
+</code></pre>
+<p><strong>步骤6：配置STP</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 启用STP
+[Agg-Switch-1F-1]stp enable
+[Agg-Switch-1F-1]stp mode rstp
+[Agg-Switch-1F-1]stp priority 4096
+</code></pre>
+<p><strong>步骤7：配置OSPF</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Agg-Switch-1F-1]ospf 1 router-id 192.168.10.21
+[Agg-Switch-1F-1-ospf-1]area 0
+[Agg-Switch-1F-1-ospf-1-area-0.0.0.0]network 192.168.10.0 0.0.0.255
+[Agg-Switch-1F-1-ospf-1-area-0.0.0.0]quit
+[Agg-Switch-1F-1-ospf-1]quit
+</code></pre>
+<p><strong>步骤8：保存配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Agg-Switch-1F-1]save
+</code></pre>
+<h2>第六阶段：接入交换机配置</h2>
+<h3>6.1 一楼办公区接入交换机配置（Access-Switch-1F-Office-1）</h3>
+<h3>设备信息</h3>
+<ul>
+<li><strong>设备型号</strong>：华为 S2750-28TP-PWR-EI</li>
+<li><strong>管理IP</strong>：192.168.10.31/24</li>
+<li><strong>角色</strong>：一楼办公区接入交换机1</li>
+</ul>
+<h3>配置步骤</h3>
+<p><strong>步骤1：基础配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">&lt;Huawei&gt;system-view
+[Huawei]sysname Access-Switch-1F-Office-1
+[Access-Switch-1F-Office-1]clock timezone BJ add 08:00:00
+
+# 创建管理用户
+[Access-Switch-1F-Office-1]aaa
+[Access-Switch-1F-Office-1-aaa]local-user admin password cipher Huawei@123
+[Access-Switch-1F-Office-1-aaa]local-user admin privilege level 15
+[Access-Switch-1F-Office-1-aaa]local-user admin service-type ssh telnet terminal
+[Access-Switch-1F-Office-1-aaa]quit
+
+# 配置SSH
+[Access-Switch-1F-Office-1]user-interface vty 0 4
+[Access-Switch-1F-Office-1-ui-vty0-4]authentication-mode aaa
+[Access-Switch-1F-Office-1-ui-vty0-4]protocol inbound ssh
+[Access-Switch-1F-Office-1-ui-vty0-4]quit
+
+[Access-Switch-1F-Office-1]rsa local-key-pair create
+[Access-Switch-1F-Office-1]ssh server enable
+[Access-Switch-1F-Office-1]stelnet server enable
+</code></pre>
+<p><strong>步骤2：创建VLAN</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Access-Switch-1F-Office-1]vlan batch 10 100
+
+[Access-Switch-1F-Office-1]vlan 10
+[Access-Switch-1F-Office-1-vlan10]description Management
+[Access-Switch-1F-Office-1-vlan10]quit
+
+[Access-Switch-1F-Office-1]vlan 100
+[Access-Switch-1F-Office-1-vlan100]description Office-1F
+[Access-Switch-1F-Office-1-vlan100]quit
+</code></pre>
+<p><strong>步骤3：配置管理接口</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Access-Switch-1F-Office-1]interface vlanif 10
+[Access-Switch-1F-Office-1-Vlanif10]ip address 192.168.10.31 24
+[Access-Switch-1F-Office-1-Vlanif10]quit
+</code></pre>
+<p><strong>步骤4：配置上联接口</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Access-Switch-1F-Office-1]interface gigabitethernet 0/0/25
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/25]description Uplink-to-Agg-Switch-1F-1
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/25]port link-type trunk
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/25]port trunk allow-pass vlan 10 100
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/25]quit
+
+[Access-Switch-1F-Office-1]interface gigabitethernet 0/0/26
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/26]description Uplink-to-Agg-Switch-1F-2
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/26]port link-type trunk
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/26]port trunk allow-pass vlan 10 100
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/26]quit
+</code></pre>
+<p><strong>步骤5：配置用户接入端口</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 批量配置用户端口
+[Access-Switch-1F-Office-1]port-group group-member ethernet 0/0/1 to ethernet 0/0/24
+[Access-Switch-1F-Office-1-port-group]port link-type access
+[Access-Switch-1F-Office-1-port-group]port default vlan 100
+[Access-Switch-1F-Office-1-port-group]poe enable
+[Access-Switch-1F-Office-1-port-group]port-security enable
+[Access-Switch-1F-Office-1-port-group]port-security max-mac-num 3
+[Access-Switch-1F-Office-1-port-group]quit
+
+# 单独配置特殊端口（如打印机端口）
+[Access-Switch-1F-Office-1]interface ethernet 0/0/24
+[Access-Switch-1F-Office-1-Ethernet0/0/24]description Printer-1F-Office-1
+[Access-Switch-1F-Office-1-Ethernet0/0/24]port-security max-mac-num 1
+[Access-Switch-1F-Office-1-Ethernet0/0/24]quit
+</code></pre>
+<p><strong>步骤6：配置STP和其他功能</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 启用STP
+[Access-Switch-1F-Office-1]stp enable
+[Access-Switch-1F-Office-1]stp mode rstp
+
+# 配置环路检测
+[Access-Switch-1F-Office-1]loopback-detection enable
+[Access-Switch-1F-Office-1]interface range ethernet 0/0/1 to ethernet 0/0/24
+[Access-Switch-1F-Office-1-if-range]loopback-detection enable
+[Access-Switch-1F-Office-1-if-range]loopback-detection action block
+[Access-Switch-1F-Office-1-if-range]quit
+
+# 配置DHCP Snooping
+[Access-Switch-1F-Office-1]dhcp snooping enable
+[Access-Switch-1F-Office-1]dhcp snooping binding enable
+[Access-Switch-1F-Office-1]interface vlan 100
+[Access-Switch-1F-Office-1-Vlanif100]dhcp snooping enable
+[Access-Switch-1F-Office-1-Vlanif100]quit
+
+# 配置上联口为信任端口
+[Access-Switch-1F-Office-1]interface gigabitethernet 0/0/25
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/25]dhcp snooping trusted
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/25]quit
+
+[Access-Switch-1F-Office-1]interface gigabitethernet 0/0/26
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/26]dhcp snooping trusted
+[Access-Switch-1F-Office-1-GigabitEthernet0/0/26]quit
+</code></pre>
+<p><strong>步骤7：保存配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Access-Switch-1F-Office-1]save
+</code></pre>
+<h2>第七阶段：无线控制器配置</h2>
+<h3>7.1 无线控制器配置（Wireless-Controller-1）</h3>
+<h3>设备信息</h3>
+<ul>
+<li><strong>设备型号</strong>：华为 AC6605</li>
+<li><strong>管理IP</strong>：192.168.10.50/24</li>
+<li><strong>角色</strong>：主无线控制器</li>
+</ul>
+<h3>配置步骤</h3>
+<p><strong>步骤1：基础配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">&lt;AC6605&gt;system-view
+[AC6605]sysname Wireless-Controller-1
+[Wireless-Controller-1]clock timezone BJ add 08:00:00
+
+# 创建管理用户
+[Wireless-Controller-1]aaa
+[Wireless-Controller-1-aaa]local-user admin password cipher Huawei@123
+[Wireless-Controller-1-aaa]local-user admin privilege level 15
+[Wireless-Controller-1-aaa]local-user admin service-type ssh web terminal
+[Wireless-Controller-1-aaa]quit
+
+# 配置SSH和Web管理
+[Wireless-Controller-1]user-interface vty 0 4
+[Wireless-Controller-1-ui-vty0-4]authentication-mode aaa
+[Wireless-Controller-1-ui-vty0-4]protocol inbound ssh
+[Wireless-Controller-1-ui-vty0-4]quit
+
+[Wireless-Controller-1]rsa local-key-pair create
+[Wireless-Controller-1]ssh server enable
+[Wireless-Controller-1]stelnet server enable
+
+[Wireless-Controller-1]web-manager enable
+[Wireless-Controller-1]web-manager port 8443
+</code></pre>
+<p><strong>步骤2：创建VLAN</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Wireless-Controller-1]vlan batch 10 500 600
+
+[Wireless-Controller-1]vlan 10
+[Wireless-Controller-1-vlan10]description Management
+[Wireless-Controller-1-vlan10]quit
+
+[Wireless-Controller-1]vlan 500
+[Wireless-Controller-1-vlan500]description Guest-Wireless
+[Wireless-Controller-1-vlan500]quit
+
+[Wireless-Controller-1]vlan 600
+[Wireless-Controller-1-vlan600]description Office-Wireless
+[Wireless-Controller-1-vlan600]quit
+</code></pre>
+<p><strong>步骤3：配置接口</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置管理接口
+[Wireless-Controller-1]interface vlanif 10
+[Wireless-Controller-1-Vlanif10]ip address 192.168.10.50 24
+[Wireless-Controller-1-Vlanif10]quit
+
+# 配置访客无线网络接口
+[Wireless-Controller-1]interface vlanif 500
+[Wireless-Controller-1-Vlanif500]ip address 192.168.50.1 24
+[Wireless-Controller-1-Vlanif500]dhcp select relay
+[Wireless-Controller-1-Vlanif500]dhcp relay server-ip 192.168.10.100
+[Wireless-Controller-1-Vlanif500]quit
+
+# 配置办公无线网络接口
+[Wireless-Controller-1]interface vlanif 600
+[Wireless-Controller-1-Vlanif600]ip address 192.168.60.1 24
+[Wireless-Controller-1-Vlanif600]dhcp select relay
+[Wireless-Controller-1-Vlanif600]dhcp relay server-ip 192.168.10.100
+[Wireless-Controller-1-Vlanif600]quit
+
+# 配置物理接口
+[Wireless-Controller-1]interface gigabitethernet 0/0/1
+[Wireless-Controller-1-GigabitEthernet0/0/1]description Link-to-Core-Switch
+[Wireless-Controller-1-GigabitEthernet0/0/1]port link-type trunk
+[Wireless-Controller-1-GigabitEthernet0/0/1]port trunk allow-pass vlan 10 500 600
+[Wireless-Controller-1-GigabitEthernet0/0/1]quit
+</code></pre>
+<p><strong>步骤4：配置无线射频模板</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 创建2.4GHz射频模板
+[Wireless-Controller-1]wlan
+[Wireless-Controller-1-wlan-view]radio-2g-profile name default_radio_2g
+[Wireless-Controller-1-wlan-radio-2g-prof-default_radio_2g]channel-width 40
+[Wireless-Controller-1-wlan-radio-2g-prof-default_radio_2g]channel auto
+[Wireless-Controller-1-wlan-radio-2g-prof-default_radio_2g]power auto
+[Wireless-Controller-1-wlan-radio-2g-prof-default_radio_2g]quit
+
+# 创建5GHz射频模板
+[Wireless-Controller-1-wlan-view]radio-5g-profile name default_radio_5g
+[Wireless-Controller-1-wlan-radio-5g-prof-default_radio_5g]channel-width 80
+[Wireless-Controller-1-wlan-radio-5g-prof-default_radio_5g]channel auto
+[Wireless-Controller-1-wlan-radio-5g-prof-default_radio_5g]power auto
+[Wireless-Controller-1-wlan-radio-5g-prof-default_radio_5g]quit
+</code></pre>
+<p><strong>步骤5：配置SSID和安全模板</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 创建办公SSID安全模板
+[Wireless-Controller-1-wlan-view]security-profile name office_security
+[Wireless-Controller-1-wlan-sec-prof-office_security]security wpa-wpa2 psk pass-phrase Huawei@2024 aes
+[Wireless-Controller-1-wlan-sec-prof-office_security]quit
+
+# 创建访客SSID安全模板
+[Wireless-Controller-1-wlan-view]security-profile name guest_security
+[Wireless-Controller-1-wlan-sec-prof-guest_security]security wpa2 psk pass-phrase Guest@123 aes
+[Wireless-Controller-1-wlan-sec-prof-guest_security]quit
+
+# 创建办公SSID模板
+[Wireless-Controller-1-wlan-view]ssid-profile name office_ssid
+[Wireless-Controller-1-wlan-ssid-prof-office_ssid]ssid Office-WiFi
+[Wireless-Controller-1-wlan-ssid-prof-office_ssid]quit
+
+# 创建访客SSID模板
+[Wireless-Controller-1-wlan-view]ssid-profile name guest_ssid
+[Wireless-Controller-1-wlan-ssid-prof-guest_ssid]ssid Guest-WiFi
+[Wireless-Controller-1-wlan-ssid-prof-guest_ssid]quit
+</code></pre>
+<p><strong>步骤6：创建VAP模板</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 创建办公VAP模板
+[Wireless-Controller-1-wlan-view]vap-profile name office_vap
+[Wireless-Controller-1-wlan-vap-prof-office_vap]forward-mode tunnel
+[Wireless-Controller-1-wlan-vap-prof-office_vap]service-vlan vlan-id 600
+[Wireless-Controller-1-wlan-vap-prof-office_vap]ssid-profile office_ssid
+[Wireless-Controller-1-wlan-vap-prof-office_vap]security-profile office_security
+[Wireless-Controller-1-wlan-vap-prof-office_vap]quit
+
+# 创建访客VAP模板
+[Wireless-Controller-1-wlan-view]vap-profile name guest_vap
+[Wireless-Controller-1-wlan-vap-prof-guest_vap]forward-mode tunnel
+[Wireless-Controller-1-wlan-vap-prof-guest_vap]service-vlan vlan-id 500
+[Wireless-Controller-1-wlan-vap-prof-guest_vap]ssid-profile guest_ssid
+[Wireless-Controller-1-wlan-vap-prof-guest_vap]security-profile guest_security
+[Wireless-Controller-1-wlan-vap-prof-guest_vap]quit
+</code></pre>
+<p><strong>步骤7：创建AP组和AP模板</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 创建AP组
+[Wireless-Controller-1-wlan-view]ap-group name default_ap_group
+[Wireless-Controller-1-wlan-ap-group-default_ap_group]quit
+
+# 创建AP模板
+[Wireless-Controller-1-wlan-view]ap-profile name default_ap_profile
+[Wireless-Controller-1-wlan-ap-prof-default_ap_profile]radio 0 radio-profile default_radio_2g
+[Wireless-Controller-1-wlan-ap-prof-default_ap_profile]radio 0 vap-profile office_vap wlan 1
+[Wireless-Controller-1-wlan-ap-prof-default_ap_profile]radio 0 vap-profile guest_vap wlan 2
+[Wireless-Controller-1-wlan-ap-prof-default_ap_profile]radio 1 radio-profile default_radio_5g
+[Wireless-Controller-1-wlan-ap-prof-default_ap_profile]radio 1 vap-profile office_vap wlan 1
+[Wireless-Controller-1-wlan-ap-prof-default_ap_profile]radio 1 vap-profile guest_vap wlan 2
+[Wireless-Controller-1-wlan-ap-prof-default_ap_profile]quit
+
+# 将AP模板应用到AP组
+[Wireless-Controller-1-wlan-view]ap-group name default_ap_group
+[Wireless-Controller-1-wlan-ap-group-default_ap_group]ap-profile default_ap_profile
+[Wireless-Controller-1-wlan-ap-group-default_ap_group]quit
+</code></pre>
+<p><strong>步骤8：配置AP</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置一楼AP
+[Wireless-Controller-1-wlan-view]ap auth-mode mac-auth
+[Wireless-Controller-1-wlan-view]ap-id 1 ap-mac 00e0-fc12-3456
+[Wireless-Controller-1-wlan-ap-1]ap-name AP-1F-Office-1
+[Wireless-Controller-1-wlan-ap-1]ap-group default_ap_group
+[Wireless-Controller-1-wlan-ap-1]quit
+
+[Wireless-Controller-1-wlan-view]ap-id 2 ap-mac 00e0-fc12-3457
+[Wireless-Controller-1-wlan-ap-2]ap-name AP-1F-Office-2
+[Wireless-Controller-1-wlan-ap-2]ap-group default_ap_group
+[Wireless-Controller-1-wlan-ap-2]quit
+
+# 继续配置其他楼层AP（示例）
+[Wireless-Controller-1-wlan-view]ap-id 3 ap-mac 00e0-fc12-3458
+[Wireless-Controller-1-wlan-ap-3]ap-name AP-2F-Office-1
+[Wireless-Controller-1-wlan-ap-3]ap-group default_ap_group
+[Wireless-Controller-1-wlan-ap-3]quit
+
+[Wireless-Controller-1-wlan-view]quit
+</code></pre>
+<p><strong>步骤9：配置CAPWAP</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 配置CAPWAP源接口
+[Wireless-Controller-1]capwap source interface vlanif 10
+</code></pre>
+<p><strong>步骤10：保存配置</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate">[Wireless-Controller-1]save
+</code></pre>
+<h2>第八阶段：DHCP服务器配置</h2>
+<h3>8.1 DHCP服务器配置</h3>
+<h3>设备信息</h3>
+<ul>
+<li><strong>服务器IP</strong>：192.168.10.100/24</li>
+<li><strong>操作系统</strong>：Linux</li>
+<li><strong>角色</strong>：DHCP服务器</li>
+</ul>
+<h3>配置步骤</h3>
+<p><strong>步骤1：安装DHCP服务</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL系统</span>
+sudo yum install dhcp -y
+
+<span class="pl-c"><span class="pl-c">#</span> Ubuntu/Debian系统</span>
+sudo apt-get install isc-dhcp-server -y</pre></div>
+<p><strong>步骤2：配置DHCP服务</strong></p>
+<pre lang="conf" class="notranslate"><code class="notranslate"># 编辑DHCP配置文件
+sudo vi /etc/dhcp/dhcpd.conf
+
+# 添加以下配置内容：
+# 全局配置
+default-lease-time 86400;
+max-lease-time 172800;
+authoritative;
+
+# DNS服务器
+option domain-name-servers 114.114.114.114, 8.8.8.8;
+option ntp-servers 192.168.10.1;
+
+# 一楼办公区DHCP池
+subnet 192.168.100.0 netmask 255.255.255.0 {
+    range 192.168.100.10 192.168.100.200;
+    option routers 192.168.100.254;
+    option broadcast-address 192.168.100.255;
+    default-lease-time 86400;
+    max-lease-time 172800;
+}
+
+# 二楼办公区DHCP池
+subnet 192.168.101.0 netmask 255.255.255.0 {
+    range 192.168.101.10 192.168.101.200;
+    option routers 192.168.101.254;
+    option broadcast-address 192.168.101.255;
+    default-lease-time 86400;
+    max-lease-time 172800;
+}
+
+# 访客无线网络DHCP池
+subnet 192.168.50.0 netmask 255.255.255.0 {
+    range 192.168.50.10 192.168.50.200;
+    option routers 192.168.50.254;
+    option broadcast-address 192.168.50.255;
+    default-lease-time 3600;
+    max-lease-time 7200;
+}
+
+# 办公无线网络DHCP池
+subnet 192.168.60.0 netmask 255.255.255.0 {
+    range 192.168.60.10 192.168.60.200;
+    option routers 192.168.60.254;
+    option broadcast-address 192.168.60.255;
+    default-lease-time 86400;
+    max-lease-time 172800;
+}
+</code></pre>
+<p><strong>步骤3：启动DHCP服务</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 启动并设置开机自启</span>
+sudo systemctl start dhcpd
+sudo systemctl <span class="pl-c1">enable</span> dhcpd
+
+<span class="pl-c"><span class="pl-c">#</span> 检查服务状态</span>
+sudo systemctl status dhcpd</pre></div>
+<h2>第九阶段：网络管理平台配置</h2>
+<h3>9.1 eSight网管平台配置</h3>
+<h3>配置步骤</h3>
+<p><strong>步骤1：安装eSight</strong></p>
+<pre class="notranslate"><code class="notranslate"># 在管理服务器上安装eSight
+# 按照华为eSight安装指南进行安装
+</code></pre>
+<p><strong>步骤2：添加设备</strong></p>
+<pre class="notranslate"><code class="notranslate"># 通过Web界面添加设备
+# 访问 https://192.168.10.101:8443
+# 使用admin/Huawei@123登录
+
+# 添加核心交换机
+设备IP：192.168.10.11
+SNMP团体名：public
+设备类型：交换机
+
+# 添加路由器
+设备IP：192.168.10.1
+SNMP团体名：public
+设备类型：路由器
+
+# 添加防火墙
+设备IP：192.168.10.20
+SNMP团体名：public
+设备类型：防火墙
+</code></pre>
+<h2>第十阶段：配置验证和测试</h2>
+<h3>10.1 网络连通性测试</h3>
+<p><strong>步骤1：基础连通性测试</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 在核心交换机上测试
+[Core-Switch-1]ping 192.168.10.12  # 测试到Core-Switch-2
+[Core-Switch-1]ping 192.168.10.1   # 测试到Router-1
+[Core-Switch-1]ping 192.168.10.21  # 测试到Agg-Switch-1F-1
+
+# 在路由器上测试
+[Router-1]ping 8.8.8.8  # 测试外网连通性
+[Router-1]ping 192.168.10.11  # 测试到核心交换机
+</code></pre>
+<p><strong>步骤2：VLAN间路由测试</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 从办公区测试到其他VLAN
+ping 192.168.101.1  # 测试VLAN间路由
+ping 192.168.200.1  # 测试到会议室VLAN
+ping 8.8.8.8        # 测试外网访问
+</code></pre>
+<p><strong>步骤3：DHCP功能测试</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 在客户端测试DHCP</span>
+ipconfig /release
+ipconfig /renew
+ipconfig /all  <span class="pl-c"><span class="pl-c">#</span> 查看获取的IP地址</span></pre></div>
+<p><strong>步骤4：无线网络测试</strong></p>
+<pre class="notranslate"><code class="notranslate"># 测试无线连接
+# 连接Office-WiFi SSID
+# 密码：Huawei@2024
+# 测试网络连通性
+</code></pre>
+<h3>10.2 故障切换测试</h3>
+<p><strong>步骤1：VRRP切换测试</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 在Core-Switch-1上关闭VLANIF接口
+[Core-Switch-1]interface vlanif 100
+[Core-Switch-1-Vlanif100]shutdown
+[Core-Switch-1-Vlanif100]quit
+
+# 在客户端测试网关是否切换到Core-Switch-2
+ping 192.168.100.254
+
+# 恢复接口
+[Core-Switch-1]interface vlanif 100
+[Core-Switch-1-Vlanif100]undo shutdown
+[Core-Switch-1-Vlanif100]quit
+</code></pre>
+<p><strong>步骤2：链路冗余测试</strong></p>
+<pre class="notranslate"><code class="notranslate"># 断开主链路，测试备用链路是否生效
+# 观察STP收敛时间
+# 测试网络连通性恢复情况
+</code></pre>
+<h1>四. 运维与检查</h1>
+<h2>配置部署注意事项</h2>
+<h3>安全注意事项</h3>
+<ol>
+<li><strong>密码安全</strong>：所有设备使用强密码，定期更换</li>
+<li><strong>访问控制</strong>：限制管理访问来源IP</li>
+<li><strong>SNMP安全</strong>：使用SNMPv3或更改默认团体名</li>
+<li><strong>固件更新</strong>：及时更新设备固件和安全补丁</li>
+</ol>
+<h3>配置备份</h3>
+<ol>
+<li><strong>定期备份</strong>：每周备份所有设备配置</li>
+<li><strong>版本管理</strong>：记录配置变更历史</li>
+<li><strong>恢复测试</strong>：定期测试配置恢复流程</li>
+</ol>
+<h3>监控告警</h3>
+<ol>
+<li><strong>性能监控</strong>：监控设备CPU、内存、接口利用率</li>
+<li><strong>故障告警</strong>：配置设备故障、链路中断告警</li>
+<li><strong>安全监控</strong>：监控异常访问和安全事件</li>
+</ol>
+<h3>文档维护</h3>
+<ol>
+<li><strong>配置文档</strong>：及时更新配置文档</li>
+<li><strong>网络拓扑</strong>：保持拓扑图与实际一致</li>
+<li><strong>操作记录</strong>：记录所有配置变更操作</li>
+</ol>
+<h2>故障排除指南</h2>
+<h3>常见问题处理</h3>
+<p><strong>问题1：设备无法SSH登录</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 检查SSH服务状态
+display ssh server status
+
+# 重新生成密钥
+rsa local-key-pair create
+
+# 检查用户配置
+display aaa local-user
+</code></pre>
+<p><strong>问题2：VLAN间无法通信</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 检查VLANIF接口状态
+display interface vlanif brief
+
+# 检查路由表
+display ip routing-table
+
+# 检查OSPF邻居
+display ospf peer
+</code></pre>
+<p><strong>问题3：DHCP客户端无法获取IP</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 检查DHCP中继配置</span>
+display dhcp relay server-group
+
+<span class="pl-c"><span class="pl-c">#</span> 检查DHCP服务器状态</span>
+sudo systemctl status dhcpd
+
+<span class="pl-c"><span class="pl-c">#</span> 查看DHCP日志</span>
+sudo tail -f /var/log/dhcpd.log</pre></div>
+<p><strong>问题4：无线客户端无法连接</strong></p>
+<pre lang="cli" class="notranslate"><code class="notranslate"># 检查AP状态
+[Wireless-Controller-1-wlan-view]display ap all
+
+# 检查VAP状态
+[Wireless-Controller-1-wlan-view]display vap all
+
+# 检查SSID配置
+[Wireless-Controller-1-wlan-view]display ssid-profile all
+</code></pre>
+<h2>配置完成检查清单</h2>
+<h3>设备配置检查</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  所有设备基础配置完成</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  管理IP地址配置正确</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  SSH访问正常</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  SNMP配置完成</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  时间同步配置</li>
+</ul>
+<h3>网络功能检查</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  VLAN创建和配置</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  VLANIF接口配置</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  路由协议配置</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  VRRP冗余配置</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  STP配置</li>
+</ul>
+<h3>安全功能检查</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  防火墙策略配置</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  ACL访问控制</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  端口安全配置</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  DHCP Snooping配置</li>
+</ul>
+<h3>无线网络检查</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  无线控制器配置</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  AP注册和上线</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  SSID广播正常</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  无线客户端连接测试</li>
+</ul>
+<h3>服务功能检查</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  DHCP服务正常</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  DNS解析正常</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  NTP时间同步</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  网管平台监控</li>
+</ul>
+<h3>连通性测试</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  内网连通性测试</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  VLAN间路由测试</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  外网访问测试</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  无线网络测试</li>
+</ul>
+<h3>冗余测试</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  VRRP切换测试</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  链路故障切换测试</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked="">  设备故障切换测试</li>
+</ul>
+<hr>
+<p><strong>配置部署完成后，请确保所有检查项目都已通过验证，并及时保存所有设备配置。</strong></p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://weisunit.github.io">Weisunit Blog</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","weisunit/weisunit.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>
