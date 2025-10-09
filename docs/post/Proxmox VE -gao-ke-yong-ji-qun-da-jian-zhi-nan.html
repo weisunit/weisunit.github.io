@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# Proxmox VE 高可用集群搭建指南
+
+## 1. 介绍
+
+[Proxmox VE (PVE)](https://www.proxmox.com/en/downloads) 是一款开源的虚拟化平台，基于 KVM (Kernel-based Virtual Machine) 和 LXC (Linux Containers) 技术，支持虚拟机和容器的运行。">
+<meta property="og:title" content="Proxmox VE 高可用集群搭建指南">
+<meta property="og:description" content="# Proxmox VE 高可用集群搭建指南
+
+## 1. 介绍
+
+[Proxmox VE (PVE)](https://www.proxmox.com/en/downloads) 是一款开源的虚拟化平台，基于 KVM (Kernel-based Virtual Machine) 和 LXC (Linux Containers) 技术，支持虚拟机和容器的运行。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://weisunit.github.io/post/Proxmox%20VE%20-gao-ke-yong-ji-qun-da-jian-zhi-nan.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>Proxmox VE 高可用集群搭建指南</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Proxmox VE 高可用集群搭建指南</h1>
+<div class="title-right">
+    <a href="https://weisunit.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/weisunit/weisunit.github.io/issues/8" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>Proxmox VE 高可用集群搭建指南</h1>
+<h2>1. 介绍</h2>
+<p><a href="https://www.proxmox.com/en/downloads" rel="nofollow">Proxmox VE (PVE)</a> 是一款开源的虚拟化平台，基于 KVM (Kernel-based Virtual Machine) 和 LXC (Linux Containers) 技术，支持虚拟机和容器的运行。PVE 还提供高可用集群管理、软件定义存储、备份和恢复以及网络管理等企业级功能。</p>
+<h2>2. 测试环境规划</h2>
+<h3>2.1 节点数量</h3>
+<ul>
+<li>官方推荐至少 3 节点搭建高可用集群</li>
+<li>3 台虚拟机用于测试，可后续添加新节点</li>
+<li>2 节点也可搭建集群部署 Ceph，但存在风险：<strong>如果有节点离线，Ceph 直接不可用</strong></li>
+<li>实际使用中保证至少3节点,最多32个节点</li>
+</ul>
+<h3>2.2 硬盘分配</h3>
+<ul>
+<li>50G 盘用于安装操作系统（实际环境中应使用两块 SSD 做 RAID1）</li>
+<li>512G 盘作为数据存储（可按需求添加）</li>
+<li>使用 Ceph 分布式存储时，存储盘不要做 RAID，直通到系统由 Ceph 统一管理</li>
+</ul>
+<h3>2.3 网络规划</h3>
+<pre class="notranslate"><code class="notranslate">管理网络：192.168.1.0/24
+集群网络：192.168.10.0/24
+Ceph存储网络：192.168.20.0/24
+</code></pre>
+<ul>
+<li>根据实际需求和网卡数量自行规划IP</li>
+<li>集群和存储网络尽可能使用 10Gbps 及以上速率的网卡</li>
+</ul>
+<h2>3. 系统安装与配置</h2>
+<h3>3.1 安装步骤</h3>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4a0e266b0f5f2037a66dbc4b3bff5cf776d90f34a8eef1b6d4679bdd34b4c262/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f62316332323436372d383266652d343435342d393739332d3238316265343065373763642e706e67"><img src="https://camo.githubusercontent.com/4a0e266b0f5f2037a66dbc4b3bff5cf776d90f34a8eef1b6d4679bdd34b4c262/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f62316332323436372d383266652d343435342d393739332d3238316265343065373763642e706e67" alt="QQ20250427-232533.png" data-canonical-src="https://cdn.jsdelivr.net/gh/weisunit/note-gen-image-sync@main/b1c22467-82fe-4454-9793-281be40e77cd.png" style="max-width: 100%;"></a></p>
+<ol>
+<li><a href="https://www.proxmox.com/en/downloads" rel="nofollow">下载 ISO 镜像</a></li>
+<li>安装步骤：选择磁盘，关闭 SWAP，设置 FQDN 和固定 IP</li>
+<li>安装完成后使用 <code class="notranslate">https://ip地址:8006</code> 登录管理界面</li>
+</ol>
+<h3>3.2 修改网络配置</h3>
+<ol>
+<li>
+<p>在<code class="notranslate">系统-&gt;网络</code>菜单创建 <code class="notranslate">Linux Bridge</code></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ef08915c5eb7709351d2cbcad62743a23eb0401a240baa2d794af760b0a10b1a/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f38656237326238382d323938642d343237372d396639632d3537396662616538646362372e706e67"><img src="https://camo.githubusercontent.com/ef08915c5eb7709351d2cbcad62743a23eb0401a240baa2d794af760b0a10b1a/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f38656237326238382d323938642d343237372d396639632d3537396662616538646362372e706e67" alt="QQ20250428-001017.png" data-canonical-src="https://cdn.jsdelivr.net/gh/weisunit/note-gen-image-sync@main/8eb72b88-298d-4277-9f9c-579fbae8dcb7.png" style="max-width: 100%;"></a></p>
+</li>
+<li>
+<p>修改 hosts 文件：</p>
+</li>
+</ol>
+<div class="highlight highlight-text-xml"><pre class="notranslate"># 管理
+192.168.1.220 pve1.weisunit.com 
+192.168.1.230 pve2.weisunit.com 
+192.168.1.240 pve3.weisunit.com 
+# 集群
+192.168.10.220 pve1.weisunit.com 
+192.168.10.230 pve2.weisunit.com 
+192.168.10.240 pve3.weisunit.com 
+# 存储
+192.168.20.220 pve1.weisunit.com 
+192.168.20.230 pve2.weisunit.com
+192.168.20.240 pve3.weisunit.com </pre></div>
+<ul>
+<li>所有节点hosts都要修改</li>
+<li>建议自建DNS服务器，每个节点DNS地址改为自建DNS地址</li>
+</ul>
+<h2>4. 配置集群</h2>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3dacb5324348a7ca8a2b00ccbefd310f148761697358d059d6c0d1083dd7b809/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f66306331303238312d306139322d346634652d393736302d3564656336633437363731322e706e67"><img src="https://camo.githubusercontent.com/3dacb5324348a7ca8a2b00ccbefd310f148761697358d059d6c0d1083dd7b809/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f66306331303238312d306139322d346634652d393736302d3564656336633437363731322e706e67" alt="QQ20250428-002002.png" data-canonical-src="https://cdn.jsdelivr.net/gh/weisunit/note-gen-image-sync@main/f0c10281-0a92-4f4e-9760-5dec6c476712.png" style="max-width: 100%;"></a></p>
+<ol>
+<li>
+<p>在<code class="notranslate">数据中心-&gt;集群</code>中点击<code class="notranslate">创建集群</code></p>
+</li>
+<li>
+<p>点击<code class="notranslate">加入信息</code>复制信息</p>
+</li>
+<li>
+<p>在其他节点<code class="notranslate">数据中心-&gt;集群</code>中点击<code class="notranslate">加入集群</code></p>
+</li>
+<li>
+<p>粘贴信息并填入密码，选择正确的集群网络</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/b4b4e646cf9f8f84375a17e631dd6faca86e0e72380e0c85dac7fcfcc3274a05/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f65313132323533372d346637322d346463612d613366392d3238366232373061316462352e706e67"><img src="https://camo.githubusercontent.com/b4b4e646cf9f8f84375a17e631dd6faca86e0e72380e0c85dac7fcfcc3274a05/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f65313132323533372d346637322d346463612d613366392d3238366232373061316462352e706e67" alt="QQ20250428-002320.png" data-canonical-src="https://cdn.jsdelivr.net/gh/weisunit/note-gen-image-sync@main/e1122537-4f72-4dca-a3f9-286b270a1db5.png" style="max-width: 100%;"></a></p>
+</li>
+</ol>
+<p>集群特性：</p>
+<ul>
+<li>任意节点网页可查看所有节点</li>
+<li>各节点配置ssh密钥互相免密码登录</li>
+<li><code class="notranslate">/etc/pve</code>配置文件自动同步</li>
+<li>节点要求时间同步（可使用<code class="notranslate">ntpdate ntp.ntsc.ac.cn</code>）</li>
+</ul>
+<h2>5. Ceph安装配置</h2>
+<h3>5.1 安装步骤</h3>
+<ol>
+<li>
+<p>在<code class="notranslate">数据中心-&gt;ceph</code>安装ceph（每个节点都要安装）</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d7c791265bb711cacea4c8626c48222a970e3d08964fa00e5f1ed013642c0639/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f36643533353736382d383833642d343562332d613164662d6631313939333035646136622e706e67"><img src="https://camo.githubusercontent.com/d7c791265bb711cacea4c8626c48222a970e3d08964fa00e5f1ed013642c0639/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f36643533353736382d383833642d343562332d613164662d6631313939333035646136622e706e67" alt="QQ20250428-003635.png" data-canonical-src="https://cdn.jsdelivr.net/gh/weisunit/note-gen-image-sync@main/6d535768-883d-45b3-a1df-f1199305da6b.png" style="max-width: 100%;"></a></p>
+</li>
+<li>
+<p>安装完成后在<code class="notranslate">数据中心-&gt;Ceph</code>中点击<code class="notranslate">配置 Ceph</code></p>
+</li>
+<li>
+<p>在节点<code class="notranslate">Ceph-&gt;监视器</code>中为其他节点添加<code class="notranslate">Monitor</code>和<code class="notranslate">Manager</code></p>
+</li>
+</ol>
+<h3>5.2 OSD配置</h3>
+<ol>
+<li>
+<p>在节点<code class="notranslate">Ceph-&gt;OSD</code>菜单中为每个磁盘创建<code class="notranslate">OSD</code></p>
+</li>
+<li>
+<p>OSD配置完成后在节点<code class="notranslate">Ceph-&gt;资源池</code>中配置资源池</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/dd5d522b2d3ca5b0f5ccc10255664b56d657544eddbf29c0d13585865cb689f0/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f64653834656337662d383561392d343639312d613830342d6431383431613666616463612e706e67"><img src="https://camo.githubusercontent.com/dd5d522b2d3ca5b0f5ccc10255664b56d657544eddbf29c0d13585865cb689f0/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f64653834656337662d383561392d343639312d613830342d6431383431613666616463612e706e67" alt="QQ20250428-005111.png" data-canonical-src="https://cdn.jsdelivr.net/gh/weisunit/note-gen-image-sync@main/de84ec7f-85a9-4691-a804-d1841a6fadca.png" style="max-width: 100%;"></a></p>
+</li>
+</ol>
+<h3>5.3 CephFS配置</h3>
+<ul>
+<li>存储只能用于存储虚拟机磁盘文件</li>
+<li>如需存储ISO镜像或备份文件需创建CephFS</li>
+<li>在节点<code class="notranslate">Ceph-&gt;CephFS-&gt;元数据服务器</code>为每台主机创建</li>
+<li>然后创建CephFS</li>
+</ul>
+<h2>6. 启用HA</h2>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f68e944bdd5ea89ec7fd3dcd12f9f1b5804a5973b1abaad22890bb7a51403e3d/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f64303434346138622d343831662d343861342d626535632d6431386632386435343664332e706e67"><img src="https://camo.githubusercontent.com/f68e944bdd5ea89ec7fd3dcd12f9f1b5804a5973b1abaad22890bb7a51403e3d/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f77656973756e69742f6e6f74652d67656e2d696d6167652d73796e63406d61696e2f64303434346138622d343831662d343861342d626535632d6431386632386435343664332e706e67" alt="QQ20250428-010158.png" data-canonical-src="https://cdn.jsdelivr.net/gh/weisunit/note-gen-image-sync@main/d0444a8b-481f-48a4-be5c-d18f28d546d3.png" style="max-width: 100%;"></a></p>
+<ol>
+<li>创建虚拟机并将磁盘放到资源池上（如不在需先迁移）</li>
+<li>在<code class="notranslate">数据中心-&gt;HA-&gt;资源</code>添加虚拟机</li>
+<li>等待状态变成<code class="notranslate">started</code>后HA启用</li>
+<li>虚拟机所在节点异常时会在另一节点重启（120秒内完成故障转移）</li>
+</ol>
+<h2>7. 国内源配置</h2>
+<div class="highlight highlight-text-xml"><pre class="notranslate"># 修改 Debian 源
+sed -i 's|http://ftp.debian.org|https://mirrors.ustc.edu.cn|g' /etc/apt/sources.list
+sed -i 's|http://security.debian.org|https://mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list
+# 修改 PVE 源
+sed -i 's|enterprise.proxmox.com|mirrors.ustc.edu.cn/proxmox|g' /etc/apt/sources.list.d/pve-enterprise.list
+# 修改 Ceph 源
+sed -i 's|enterprise.proxmox.com|mirrors.ustc.edu.cn/proxmox|g' /etc/apt/sources.list.d/ceph.list
+# 修改 PVE 和 Ceph 为非订阅源
+sed -i 's|enterprise|no-subscription|g' /etc/apt/sources.list.d/{pve-enterprise,ceph}.list</pre></div>
+<p>去除未订阅提示：</p>
+<div class="highlight highlight-text-xml"><pre class="notranslate">sed -i.bak "s/data.status.toLowerCase() !== 'active'/false/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+systemctl restart pveproxy.service</pre></div>
+<h2>参考链接</h2>
+<ol>
+<li><a href="https://www.proxmox.com/en/downloads" rel="nofollow">Proxmox VE 下载</a></li>
+<li><a href="https://pve.proxmox.com/pve-docs/chapter-ha-manager.html#_requirements" rel="nofollow">Proxmox VE HA 要求</a></li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://weisunit.github.io">Weisunit Blog</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","weisunit/weisunit.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>
