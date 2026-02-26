@@ -21,7 +21,7 @@
 <meta property="og:url" content="https://weisunit.github.io/post/Linux-chang-yong-chu-shi-hua-pei-zhi.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>Linux常用初始化配置</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -93,17 +93,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>这是第一步，确保您的系统软件包都是最新的，以获取最新的功能、修复和安全补丁。</p>
 <ul>
 <li><strong>Debian/Ubuntu 系列 (apt)</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo apt update          # 更新软件包列表
-sudo apt upgrade -y      # 升级所有可升级的软件包
-sudo apt autoremove -y   # 清理不再需要的依赖包
-sudo apt clean           # 清理下载的包文件
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt update          <span class="pl-c"><span class="pl-c">#</span> 更新软件包列表</span>
+sudo apt upgrade -y      <span class="pl-c"><span class="pl-c">#</span> 升级所有可升级的软件包</span>
+sudo apt autoremove -y   <span class="pl-c"><span class="pl-c">#</span> 清理不再需要的依赖包</span>
+sudo apt clean           <span class="pl-c"><span class="pl-c">#</span> 清理下载的包文件</span></pre></div>
 </li>
 <li><strong>CentOS/RHEL/Fedora 系列 (yum/dnf)</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo dnf update -y       # 更新所有软件包 (CentOS 8+, Fedora)
-# 或者对于 CentOS 7 及以下
-sudo yum update -y       # 更新所有软件包
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf update -y       <span class="pl-c"><span class="pl-c">#</span> 更新所有软件包 (CentOS 8+, Fedora)</span>
+<span class="pl-c"><span class="pl-c">#</span> 或者对于 CentOS 7 及以下</span>
+sudo yum update -y       <span class="pl-c"><span class="pl-c">#</span> 更新所有软件包</span></pre></div>
 </li>
 </ul>
 <h4>2. 用户管理与权限</h4>
@@ -111,8 +109,7 @@ sudo yum update -y       # 更新所有软件包
 <ul>
 <li>
 <p><strong>创建新用户</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo adduser your_username # 创建新用户并设置密码
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo adduser your_username <span class="pl-c"><span class="pl-c">#</span> 创建新用户并设置密码</span></pre></div>
 <ul>
 <li>根据提示输入密码和其他信息。</li>
 </ul>
@@ -122,14 +119,12 @@ sudo yum update -y       # 更新所有软件包
 <ul>
 <li>
 <p><strong>方法一：添加到sudo组 (推荐)</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo usermod -aG sudo your_username # Debian/Ubuntu
-sudo usermod -aG wheel your_username # CentOS/RHEL/Fedora
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo usermod -aG sudo your_username <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+sudo usermod -aG wheel your_username <span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL/Fedora</span></pre></div>
 </li>
 <li>
 <p><strong>方法二：编辑sudoers文件 (谨慎操作)</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo visudo
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo visudo</pre></div>
 <p>在文件中找到类似 <code class="notranslate">root ALL=(ALL:ALL) ALL</code> 的行，在其下方添加：</p>
 <pre class="notranslate"><code class="notranslate">your_username ALL=(ALL:ALL) ALL
 </code></pre>
@@ -139,8 +134,7 @@ sudo usermod -aG wheel your_username # CentOS/RHEL/Fedora
 </li>
 <li>
 <p><strong>切换到新用户</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">su - your_username
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">su - your_username</pre></div>
 <p>后续操作尽量使用新用户，需要root权限时使用 <code class="notranslate">sudo</code>。</p>
 </li>
 </ul>
@@ -151,20 +145,17 @@ sudo usermod -aG wheel your_username # CentOS/RHEL/Fedora
 <p><strong>安装OpenSSH Server (如果未安装)</strong></p>
 <ul>
 <li><strong>Debian/Ubuntu</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo apt install openssh-server -y
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install openssh-server -y</pre></div>
 </li>
 <li><strong>CentOS/RHEL/Fedora</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo dnf install openssh-server -y
-sudo systemctl enable sshd --now # 启用并启动SSH服务
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install openssh-server -y
+sudo systemctl <span class="pl-c1">enable</span> sshd --now <span class="pl-c"><span class="pl-c">#</span> 启用并启动SSH服务</span></pre></div>
 </li>
 </ul>
 </li>
 <li>
 <p><strong>修改SSH默认端口 (可选，增强安全性)</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo vi /etc/ssh/sshd_config
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo vi /etc/ssh/sshd_config</pre></div>
 <p>找到 <code class="notranslate">Port 22</code>，取消注释并修改为其他端口号（例如 <code class="notranslate">Port 2222</code>）。</p>
 <pre class="notranslate"><code class="notranslate">#Port 22
 Port 2222
@@ -190,8 +181,7 @@ PubkeyAuthentication yes
 </li>
 <li>
 <p><strong>重启SSH服务</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo systemctl restart sshd
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart sshd</pre></div>
 <p><strong>注意：</strong> 在禁用密码登录前，请务必确认您的SSH密钥登录已成功配置并测试通过，否则可能导致无法登录！</p>
 </li>
 </ul>
@@ -199,22 +189,20 @@ PubkeyAuthentication yes
 <p>为系统设置防火墙规则，限制不必要的端口访问。</p>
 <ul>
 <li><strong>Debian/Ubuntu (ufw)</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo apt install ufw -y              # 安装ufw
-sudo ufw enable                      # 启用ufw
-sudo ufw allow 2222/tcp              # 允许SSH端口 (替换为您的SSH端口)
-sudo ufw allow http                  # 允许HTTP (80端口)
-sudo ufw allow https                 # 允许HTTPS (443端口)
-sudo ufw status verbose              # 查看防火墙状态
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install ufw -y              <span class="pl-c"><span class="pl-c">#</span> 安装ufw</span>
+sudo ufw <span class="pl-c1">enable</span>                      <span class="pl-c"><span class="pl-c">#</span> 启用ufw</span>
+sudo ufw allow 2222/tcp              <span class="pl-c"><span class="pl-c">#</span> 允许SSH端口 (替换为您的SSH端口)</span>
+sudo ufw allow http                  <span class="pl-c"><span class="pl-c">#</span> 允许HTTP (80端口)</span>
+sudo ufw allow https                 <span class="pl-c"><span class="pl-c">#</span> 允许HTTPS (443端口)</span>
+sudo ufw status verbose              <span class="pl-c"><span class="pl-c">#</span> 查看防火墙状态</span></pre></div>
 </li>
 <li><strong>CentOS/RHEL/Fedora (firewalld)</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo systemctl enable firewalld --now # 启用并启动firewalld
-sudo firewall-cmd --permanent --add-port=2222/tcp # 允许SSH端口
-sudo firewall-cmd --permanent --add-service=http  # 允许HTTP
-sudo firewall-cmd --permanent --add-service=https # 允许HTTPS
-sudo firewall-cmd --reload           # 重新加载防火墙规则
-sudo firewall-cmd --list-all         # 查看所有规则
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl <span class="pl-c1">enable</span> firewalld --now <span class="pl-c"><span class="pl-c">#</span> 启用并启动firewalld</span>
+sudo firewall-cmd --permanent --add-port=2222/tcp <span class="pl-c"><span class="pl-c">#</span> 允许SSH端口</span>
+sudo firewall-cmd --permanent --add-service=http  <span class="pl-c"><span class="pl-c">#</span> 允许HTTP</span>
+sudo firewall-cmd --permanent --add-service=https <span class="pl-c"><span class="pl-c">#</span> 允许HTTPS</span>
+sudo firewall-cmd --reload           <span class="pl-c"><span class="pl-c">#</span> 重新加载防火墙规则</span>
+sudo firewall-cmd --list-all         <span class="pl-c"><span class="pl-c">#</span> 查看所有规则</span></pre></div>
 </li>
 </ul>
 <h4>5. 时区和时间同步</h4>
@@ -222,9 +210,8 @@ sudo firewall-cmd --list-all         # 查看所有规则
 <ul>
 <li>
 <p><strong>设置时区</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo timedatectl set-timezone Asia/Shanghai # 设置为上海时区
-timedatectl status                          # 查看当前时区状态
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo timedatectl set-timezone Asia/Shanghai <span class="pl-c"><span class="pl-c">#</span> 设置为上海时区</span>
+timedatectl status                          <span class="pl-c"><span class="pl-c">#</span> 查看当前时区状态</span></pre></div>
 <ul>
 <li>您可以使用 <code class="notranslate">timedatectl list-timezones</code> 查看所有可用时区。</li>
 </ul>
@@ -234,15 +221,13 @@ timedatectl status                          # 查看当前时区状态
 <ul>
 <li><strong>Debian/Ubuntu</strong><br>
 通常 <code class="notranslate">systemd-timesyncd</code> 已经默认启用。
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo apt install ntpdate -y # 如果需要手动同步
-sudo ntpdate -u pool.ntp.org # 手动同步一次
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install ntpdate -y <span class="pl-c"><span class="pl-c">#</span> 如果需要手动同步</span>
+sudo ntpdate -u pool.ntp.org <span class="pl-c"><span class="pl-c">#</span> 手动同步一次</span></pre></div>
 </li>
 <li><strong>CentOS/RHEL/Fedora</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo dnf install chrony -y   # 安装chrony (推荐替代ntp)
-sudo systemctl enable chronyd --now # 启用并启动chronyd
-chronyc sources -v           # 查看NTP同步状态
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install chrony -y   <span class="pl-c"><span class="pl-c">#</span> 安装chrony (推荐替代ntp)</span>
+sudo systemctl <span class="pl-c1">enable</span> chronyd --now <span class="pl-c"><span class="pl-c">#</span> 启用并启动chronyd</span>
+chronyc sources -v           <span class="pl-c"><span class="pl-c">#</span> 查看NTP同步状态</span></pre></div>
 </li>
 </ul>
 </li>
@@ -252,16 +237,14 @@ chronyc sources -v           # 查看NTP同步状态
 <ul>
 <li>
 <p><strong>文本编辑器</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo apt install vim -y # Debian/Ubuntu
-sudo dnf install vim -y # CentOS/RHEL/Fedora
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install vim -y <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+sudo dnf install vim -y <span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL/Fedora</span></pre></div>
 <p>或者使用 <code class="notranslate">nano</code> (通常已预装)。</p>
 </li>
 <li>
 <p><strong>网络工具</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo apt install net-tools iputils-ping traceroute curl wget -y # Debian/Ubuntu
-sudo dnf install net-tools iputils-ping traceroute curl wget -y # CentOS/RHEL/Fedora
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install net-tools iputils-ping traceroute curl wget -y <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+sudo dnf install net-tools iputils-ping traceroute curl wget -y <span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL/Fedora</span></pre></div>
 <ul>
 <li><code class="notranslate">net-tools</code> 包含 <code class="notranslate">ifconfig</code>, <code class="notranslate">netstat</code> 等</li>
 <li><code class="notranslate">iputils-ping</code> 包含 <code class="notranslate">ping</code></li>
@@ -271,9 +254,8 @@ sudo dnf install net-tools iputils-ping traceroute curl wget -y # CentOS/RHEL/Fe
 </li>
 <li>
 <p><strong>系统监控工具</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo apt install htop iotop iftop -y # Debian/Ubuntu
-sudo dnf install htop iotop iftop -y # CentOS/RHEL/Fedora
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install htop iotop iftop -y <span class="pl-c"><span class="pl-c">#</span> Debian/Ubuntu</span>
+sudo dnf install htop iotop iftop -y <span class="pl-c"><span class="pl-c">#</span> CentOS/RHEL/Fedora</span></pre></div>
 <ul>
 <li><code class="notranslate">htop</code> 交互式进程查看器</li>
 <li><code class="notranslate">iotop</code> 磁盘I/O监控</li>
@@ -286,8 +268,7 @@ sudo dnf install htop iotop iftop -y # CentOS/RHEL/Fedora
 <ul>
 <li>
 <p><strong>修改文件描述符限制 (例如，对于高并发服务)</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo vi /etc/security/limits.conf
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo vi /etc/security/limits.conf</pre></div>
 <p>添加：</p>
 <pre class="notranslate"><code class="notranslate">* soft nofile 65535
 * hard nofile 65535
@@ -298,14 +279,12 @@ sudo dnf install htop iotop iftop -y # CentOS/RHEL/Fedora
 </li>
 <li>
 <p><strong>修改系统级文件描述符限制</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo vi /etc/sysctl.conf
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo vi /etc/sysctl.conf</pre></div>
 <p>添加或修改：</p>
 <pre class="notranslate"><code class="notranslate">fs.file-max = 65535
 </code></pre>
 <p>应用更改：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo sysctl -p
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo sysctl -p</pre></div>
 </li>
 </ul>
 <h4>8. 定期维护</h4>
@@ -313,22 +292,19 @@ sudo dnf install htop iotop iftop -y # CentOS/RHEL/Fedora
 <li><strong>设置自动更新 (可选，取决于环境)</strong>
 <ul>
 <li><strong>Debian/Ubuntu (unattended-upgrades)</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo apt install unattended-upgrades -y
-sudo dpkg-reconfigure --priority=low unattended-upgrades # 配置自动更新
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install unattended-upgrades -y
+sudo dpkg-reconfigure --priority=low unattended-upgrades <span class="pl-c"><span class="pl-c">#</span> 配置自动更新</span></pre></div>
 </li>
 <li><strong>CentOS/RHEL/Fedora (dnf-automatic)</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo dnf install dnf-automatic -y
-sudo vi /etc/dnf/automatic.conf # 配置更新模式
-sudo systemctl enable dnf-automatic.timer --now # 启用定时器
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install dnf-automatic -y
+sudo vi /etc/dnf/automatic.conf <span class="pl-c"><span class="pl-c">#</span> 配置更新模式</span>
+sudo systemctl <span class="pl-c1">enable</span> dnf-automatic.timer --now <span class="pl-c"><span class="pl-c">#</span> 启用定时器</span></pre></div>
 </li>
 </ul>
 </li>
 <li><strong>定期清理日志</strong><br>
 通常由 <code class="notranslate">logrotate</code> 自动处理，但您可以检查其配置：
-<pre lang="bash" class="notranslate"><code class="notranslate">ls /etc/logrotate.d/
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">ls /etc/logrotate.d/</pre></div>
 </li>
 </ul>
 <hr>
