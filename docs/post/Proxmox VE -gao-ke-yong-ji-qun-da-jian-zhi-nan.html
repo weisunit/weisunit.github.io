@@ -25,7 +25,7 @@
 <meta property="og:url" content="https://weisunit.github.io/post/Proxmox%20VE%20-gao-ke-yong-ji-qun-da-jian-zhi-nan.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>Proxmox VE 高可用集群搭建指南</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -135,7 +135,7 @@ Ceph存储网络：192.168.20.0/24
 <p>修改 hosts 文件：</p>
 </li>
 </ol>
-<div class="highlight highlight-text-xml"><pre class="notranslate"># 管理
+<pre lang="xml" class="notranslate"><code class="notranslate"># 管理
 192.168.1.220 pve1.weisunit.com 
 192.168.1.230 pve2.weisunit.com 
 192.168.1.240 pve3.weisunit.com 
@@ -146,7 +146,8 @@ Ceph存储网络：192.168.20.0/24
 # 存储
 192.168.20.220 pve1.weisunit.com 
 192.168.20.230 pve2.weisunit.com
-192.168.20.240 pve3.weisunit.com </pre></div>
+192.168.20.240 pve3.weisunit.com 
+</code></pre>
 <ul>
 <li>所有节点hosts都要修改</li>
 <li>建议自建DNS服务器，每个节点DNS地址改为自建DNS地址</li>
@@ -215,7 +216,7 @@ Ceph存储网络：192.168.20.0/24
 <li>虚拟机所在节点异常时会在另一节点重启（120秒内完成故障转移）</li>
 </ol>
 <h2>7. 国内源配置</h2>
-<div class="highlight highlight-text-xml"><pre class="notranslate"># 修改 Debian 源
+<pre lang="xml" class="notranslate"><code class="notranslate"># 修改 Debian 源
 sed -i 's|http://ftp.debian.org|https://mirrors.ustc.edu.cn|g' /etc/apt/sources.list
 sed -i 's|http://security.debian.org|https://mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list
 # 修改 PVE 源
@@ -223,10 +224,12 @@ sed -i 's|enterprise.proxmox.com|mirrors.ustc.edu.cn/proxmox|g' /etc/apt/sources
 # 修改 Ceph 源
 sed -i 's|enterprise.proxmox.com|mirrors.ustc.edu.cn/proxmox|g' /etc/apt/sources.list.d/ceph.list
 # 修改 PVE 和 Ceph 为非订阅源
-sed -i 's|enterprise|no-subscription|g' /etc/apt/sources.list.d/{pve-enterprise,ceph}.list</pre></div>
+sed -i 's|enterprise|no-subscription|g' /etc/apt/sources.list.d/{pve-enterprise,ceph}.list
+</code></pre>
 <p>去除未订阅提示：</p>
-<div class="highlight highlight-text-xml"><pre class="notranslate">sed -i.bak "s/data.status.toLowerCase() !== 'active'/false/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
-systemctl restart pveproxy.service</pre></div>
+<pre lang="xml" class="notranslate"><code class="notranslate">sed -i.bak "s/data.status.toLowerCase() !== 'active'/false/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+systemctl restart pveproxy.service
+</code></pre>
 <h2>参考链接</h2>
 <ol>
 <li><a href="https://www.proxmox.com/en/downloads" rel="nofollow">Proxmox VE 下载</a></li>
